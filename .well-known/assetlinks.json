@@ -1,0 +1,13 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "cl.disertin.app",
+      "sha256_cert_fingerprints": [
+        "21:E8:48:94:A3:66:60:09:89:54:A0:BB:E9:AE:9D:76:2F:6D:65:01:C8:19:BC:52:C6:DE:2A:12:C5:7E:CD:A1",
+        "81:8B:9F:7F:EC:1B:BA:67:36:7D:0D:8D:02:F2:4F:67:51:92:90:CD:FB:09:73:E5:F0:9D:7F:92:9F:3A:23:26"
+      ]
+    }
+  }
+]
