@@ -200,12 +200,8 @@ function viewHome() {
     <p class="font-ui text-[.95rem] font-semibold uppercase tracking-[.14em] text-violet-soft">Bienvenido a tu club.</p>
     <p class="font-ui text-[.95rem] uppercase tracking-[.14em] text-muted">El mundo de la coctelería te espera</p></div>
     ${countrySelect(`Estás en ${me?.flag ?? ""}`)}</section>
-  <section class="relative grid items-center gap-6 md:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
-    <div id="wheel-inline" class="flex flex-col items-center gap-5 text-center order-2" aria-label="Ruleta: descubre tu próximo cóctel"></div>
-    <div class="flex flex-col gap-5 order-1"><p class="font-ui text-sm text-muted">Cóctel del día · ${esc(tco?.name)}</p>
-      <h1 class="neon-sign ignite text-[clamp(2.6rem,8vw,5rem)] uppercase" style="--neon:${neon}">${esc(t.international_name)}</h1>
-      <p class="prose-club max-w-[46ch] text-muted">${esc(t.summary)}</p>
-      <div class="flex flex-wrap items-center gap-4">${glass(t, 64, "ignite-svg shrink-0")}<a href="#c-${t.slug}" class="btn-ghost">Ver la receta y su historia</a></div></div></section>
+  <section class="flex flex-col items-center gap-4 text-center"><h1 class="neon-sign text-[clamp(2.4rem,7vw,4.2rem)] uppercase" style="--neon:#ff2ba6">Descubre tu próximo cóctel</h1>
+    <div id="wheel-inline" class="flex w-full max-w-md flex-col items-center gap-5" aria-label="Ruleta: descubre tu próximo cóctel"></div></section>
   <section class="flex flex-col gap-5"><p class="font-display text-[clamp(2rem,6vw,3.4rem)] font-extrabold uppercase leading-[.9]">The world is your bar.</p>
     <form data-home-search class="relative max-w-2xl" role="search"><label for="hq" class="sr-only">Buscar recetas</label><span class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted">${ic(I.search)}</span>
     <input id="hq" name="q" placeholder="Busca por nombre, país o ingrediente: negroni, Perú, pisco…" class="field !rounded-full !py-3.5 !pl-12"></form>
@@ -220,7 +216,13 @@ function viewHome() {
     <h2 class="flex items-center gap-3 font-display text-4xl font-bold uppercase"><span class="text-violet-soft">${ic(I.spark, "h-8 w-8")}</span>Mixology AI</h2>
     <p class="max-w-[52ch] text-muted">Dile al bartender qué tienes en casa o qué te provoca, y te propone un cóctel de la biblioteca con su receta y alternativas locales.</p>
     <form data-ask class="flex max-w-2xl flex-col gap-2 sm:flex-row"><input name="q" class="field !rounded-full" placeholder="Tengo ron, menta y azúcar. ¿Qué puedo hacer?"><button class="btn-neon shrink-0">Preguntar</button></form></div></section>
-  ${shelf("Últimos descubrimientos", search({ era: "moderno" }).slice(0, 8), "#explore")}</div>`;
+  ${shelf("Últimos descubrimientos", search({ era: "moderno" }).slice(0, 8), "#explore")}
+  <section class="relative grid items-center gap-6 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
+    <div class="flex flex-col gap-5"><p class="font-ui text-sm text-muted">Cóctel del día · ${esc(tco?.name)}</p>
+      <h2 class="neon-sign ignite text-[clamp(2.6rem,8vw,5rem)] uppercase" style="--neon:${neon}">${esc(t.international_name)}</h2>
+      <p class="prose-club max-w-[46ch] text-muted">${esc(t.summary)}</p>
+      <a href="#c-${t.slug}" class="btn-ghost self-start">Ver la receta y su historia</a></div>
+    <div class="relative flex justify-center"><div class="absolute inset-x-8 bottom-4 h-10 rounded-[50%] blur-2xl" style="background:${neon};opacity:.35"></div>${glass(t, 220, "relative h-auto w-36 sm:w-44 md:w-[220px]")}</div></section></div>`;
 }
 
 const FLAV = [["", "Cualquiera"], ["dulce", "Dulce"], ["acido", "Ácido"], ["amargo", "Amargo"], ["seco", "Seco"], ["frutal", "Frutal"], ["especiado", "Especiado"], ["intenso", "Intenso"]];
