@@ -200,7 +200,7 @@ html[data-motion="reduced"] *, html[data-motion="reduced"] *::before, html[data-
 }
 
 </style>
-<style>body{padding-top:env(safe-area-inset-top)}</style>
+<style>body{padding-top:env(safe-area-inset-top)}@keyframes bulb{50%{opacity:.25}}.wheel-bulb{animation:bulb .9s steps(1) infinite}@media (prefers-reduced-motion:reduce){.wheel-bulb{animation:none}}html[data-motion=reduced] .wheel-bulb{animation:none}</style>
 </head>
 <body class="min-h-dvh">
 <div class="ambient" aria-hidden="true"></div>
@@ -213,6 +213,7 @@ html[data-motion="reduced"] *, html[data-motion="reduced"] *::before, html[data-
 </div>
 <nav id="bottom" aria-label="Principal móvil" class="fixed inset-x-0 bottom-0 z-40 border-t border-white/[.08] bg-ink/90 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl lg:hidden"></nav>
 <div id="bm"></div>
+<div id="wheel"></div>
 <div id="toast" role="status" class="whitespace-nowrap pointer-events-none fixed bottom-24 left-1/2 z-[120] -translate-x-1/2 translate-y-4 rounded-full border border-white/15 bg-graphite px-4 py-2 font-ui text-sm opacity-0 shadow-lg transition-all lg:bottom-8"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>

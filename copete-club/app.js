@@ -441,7 +441,7 @@ function ask(text) {
 function viewMocktails() {
   return `<div class="flex flex-col gap-8"><header class="flex flex-col gap-3"><h1 class="neon-sign text-[clamp(3.2rem,11vw,6.5rem)] uppercase" style="--neon:#22e5d4">Mocktails</h1>
   <p class="max-w-[60ch] text-muted">Bebidas sin alcohol con identidad propia: tradiciones de todo el mundo, clásicos de hace un siglo y creaciones del club. Ninguna es un cóctel al que solo le quitamos el alcohol.</p>
-  <button data-discover="mock" class="btn-neon self-start">Descubrir un mocktail</button></header>${grid(search({ type: "mocktail" }))}
+  <button data-discover="mock" class="btn-neon self-start">Girar la ruleta sin alcohol</button></header>${grid(search({ type: "mocktail" }))}
   <p class="font-ui text-xs text-faint">Algunas preparaciones llevan amargos aromáticos en gotas, que aportan trazas de alcohol; la ficha lo indica.</p></div>`;
 }
 
@@ -495,6 +495,83 @@ function viewProfile() {
   <section class="flex flex-col items-start gap-3 border-t border-white/[.07] pt-6"><button data-reset class="font-ui text-sm text-faint underline hover:text-danger">Borrar mis datos de esta revisión</button></section></div>`;
 }
 const viewNotFound = () => `<div class="flex flex-col items-start gap-4 py-16"><p class="neon-sign text-[clamp(4rem,14vw,9rem)]" style="--neon:#ff2ba6">404</p><p class="text-xl">Esta barra está cerrada. La página que buscas no existe.</p><a href="#explore" class="btn-neon">Volver a explorar</a></div>`;
+
+
+// ───────────── ruleta "Descubrir mi próximo cóctel" ─────────────
+const WHEEL_N = 12;
+let wheel = null;
+function wheelPool(f) {
+  let list = DATA.cocktails;
+  if (f === "mock") list = list.filter((c) => c.is_mocktail);
+  else if (f === "pais") list = list.filter((c) => c.origin_country === S.country);
+  else if (f === "clasico") list = list.filter((c) => c.era === "clasico" && !c.is_mocktail);
+  else list = list.filter((c) => !c.is_mocktail);
+  if (list.length < 4) list = DATA.cocktails.filter((c) => !c.is_mocktail);
+  const shuffled = [...list].sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, Math.min(WHEEL_N, shuffled.length));
+}
+const SEG_COLORS = ["#2a1747", "#14111c", "#3a0f2c", "#14111c", "#0f2b2c", "#14111c"];
+function wheelSVG(items) {
+  const n = items.length, seg = 360 / n, R = 150, rad = (d) => ((d - 90) * Math.PI) / 180;
+  const pt = (d, r = R) => [160 + r * Math.cos(rad(d)), 160 + r * Math.sin(rad(d))];
+  const slices = items.map((c, i) => {
+    const [x1, y1] = pt(i * seg), [x2, y2] = pt((i + 1) * seg);
+    const base = c.international_name.replace(/\s*\(.*\)/, ""); const name = base.length > 13 ? base.slice(0, 12) + "…" : base;
+    return `<path d="M160 160 L${x1} ${y1} A${R} ${R} 0 0 1 ${x2} ${y2} Z" fill="${SEG_COLORS[i % SEG_COLORS.length]}" stroke="rgb(255 255 255 / .12)"/>
+      <g transform="rotate(${(i + 0.5) * seg} 160 160)"><circle cx="160" cy="${160 - R + 13}" r="3.2" fill="${neonColor(c.color)}" style="filter:drop-shadow(0 0 4px ${neonColor(c.color)})"/>
+      <text x="160" y="${160 - R + 24}" transform="rotate(90 160 ${160 - R + 24})" fill="#f4effa" font-family="Big Shoulders Text, Arial Narrow, sans-serif" font-weight="700" font-size="12" letter-spacing=".04em" dominant-baseline="middle">${esc(name.toUpperCase())}</text></g>`;
+  }).join("");
+  const bulbs = Array.from({ length: 24 }, (_, i) => { const [x, y] = pt(i * 15, R + 8); return `<circle cx="${x}" cy="${y}" r="2.6" fill="${i % 2 ? "#ff2ba6" : "#d8b46a"}" class="wheel-bulb" style="animation-delay:${(i % 2) * 0.35}s"/>`; }).join("");
+  return `<svg viewBox="0 0 320 320" class="h-auto w-full max-w-[22rem]" role="img" aria-label="Ruleta de cócteles">
+    <circle cx="160" cy="160" r="${R + 14}" fill="#0b0912" stroke="#8b3dff" stroke-width="2.5" class="neon-line" style="--neon:#8b3dff"/>
+    ${bulbs}
+    <g id="wheel-rot" style="transform-origin:160px 160px;transform:rotate(${wheel?.rot ?? 0}deg)">${slices}</g>
+    <circle cx="160" cy="160" r="30" fill="#07050c" stroke="#ff2ba6" stroke-width="2" class="neon-line" style="--neon:#ff2ba6"/>
+    <g transform="translate(138 138) scale(.69)">${logo(64).replace(/<svg[^>]*>/, "").replace("</svg>", "")}</g>
+  </svg>`;
+}
+function openWheel(filter = "") {
+  wheel = { filter, items: wheelPool(filter), rot: 0, spinning: false, result: null };
+  renderWheel();
+  document.body.style.overflow = "hidden";
+}
+function closeWheel() { wheel = null; $("#wheel").innerHTML = ""; document.body.style.overflow = ""; }
+function renderWheel() {
+  const w = wheel, r = w.result;
+  const chips = [["", "Con alcohol"], ["mock", "Sin alcohol"], ["pais", `De ${country(S.country)?.name ?? "mi país"}`], ["clasico", "Clásicos"]];
+  $("#wheel").innerHTML = `<div role="dialog" aria-modal="true" aria-label="Ruleta de cócteles" class="fixed inset-0 z-[110] flex flex-col overflow-y-auto bg-ink/95 backdrop-blur-md">
+  <div class="flex items-center justify-between px-4 py-3"><p class="font-display text-2xl font-bold uppercase">Tu próximo cóctel</p><button data-wheel="close" class="btn-ghost !py-2">Cerrar</button></div>
+  <div class="mx-auto flex w-full max-w-md flex-1 flex-col items-center gap-5 px-5 pb-10">
+    <div class="flex flex-wrap justify-center gap-2">${chips.map(([k, l]) => `<button data-wheelfilter="${k}" aria-pressed="${w.filter === k}" ${w.spinning ? "disabled" : ""} class="chip">${esc(l)}</button>`).join("")}</div>
+    <div class="relative w-full max-w-[22rem]">
+      <svg viewBox="0 0 40 40" class="absolute left-1/2 top-[-6px] z-10 h-9 w-9 -translate-x-1/2" aria-hidden="true"><path d="M8 4 L32 4 L20 30 Z" fill="#ff2ba6" stroke="#fff" stroke-width="1.5" stroke-linejoin="round" style="filter:drop-shadow(0 0 6px #ff2ba6)"/></svg>
+      ${wheelSVG(w.items)}
+    </div>
+    ${r ? `<div class="surface flex w-full items-center gap-4 border-fuchsia/40 p-4">${glass(r, 70)}<div class="flex min-w-0 flex-col gap-1"><p class="font-ui text-sm text-muted">${country(r.origin_country)?.flag ?? ""} ${esc(country(r.origin_country)?.name)}</p><p class="neon-sign text-4xl uppercase" style="--neon:${neonColor(r.color)}">${esc(r.international_name)}</p><p class="text-sm text-muted">${esc(r.summary)}</p></div></div>
+      <div class="flex w-full gap-3"><button data-wheel="spin" class="btn-ghost flex-1">Girar de nuevo</button><a href="#c-${r.slug}" class="btn-neon flex-1">Ver receta</a></div>`
+    : `<button data-wheel="spin" ${w.spinning ? "disabled" : ""} class="btn-neon w-full !py-4 text-lg">${w.spinning ? "Girando…" : "Girar la ruleta"}</button>`}
+  </div></div>`;
+}
+function spinWheel() {
+  const w = wheel; if (!w || w.spinning) return;
+  if (w.result) { w.items = wheelPool(w.filter); w.result = null; w.rot = 0; renderWheel(); }
+  const n = w.items.length, seg = 360 / n, i = Math.floor(Math.random() * n);
+  const jitter = (Math.random() - 0.5) * seg * 0.6;
+  const target = 360 * 6 + (360 - (i + 0.5) * seg) + jitter;
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches || document.documentElement.dataset.motion === "reduced";
+  w.spinning = true; renderWheel();
+  const g = $("#wheel-rot");
+  requestAnimationFrame(() => {
+    g.style.transition = reduced ? "none" : "transform 4.6s cubic-bezier(.12,.72,.1,1)";
+    g.style.transform = `rotate(${target}deg)`;
+    setTimeout(() => {
+      if (wheel !== w) return;
+      w.rot = target % 360; w.spinning = false; w.result = w.items[i];
+      try { navigator.vibrate?.(60); } catch {}
+      renderWheel();
+    }, reduced ? 50 : 4700);
+  });
+}
 
 // modo bartender
 let bm = null;
@@ -559,7 +636,10 @@ document.addEventListener("click", (e) => {
   const d = el.dataset;
   if (d.bm) return bmAction(d.bm);
   if (d.go) { location.hash = "pais-" + d.go.toLowerCase(); return; }
-  if ("discover" in d) { const list = search({ type: d.discover === "mock" ? "mocktail" : "" }); location.hash = "c-" + list[Math.floor(Math.random() * list.length)].slug; return; }
+  if ("discover" in d) return openWheel(d.discover === "mock" ? "mock" : "");
+  if (d.wheel === "close") return closeWheel();
+  if (d.wheel === "spin") return spinWheel();
+  if (d.wheelfilter !== undefined && wheel && !wheel.spinning) { wheel.filter = d.wheelfilter; wheel.items = wheelPool(d.wheelfilter); wheel.result = null; wheel.rot = 0; return renderWheel(); }
   if (d.flavor !== undefined) { S.filters.flavor = d.flavor; render(true); return; }
   if ("clear" in d) { S.filters = {}; render(true); return; }
   if (d.zone) { zone = d.zone; document.querySelectorAll("[data-zone]").forEach((b) => { const on = b.dataset.zone === zone; b.setAttribute("aria-selected", on); b.classList.toggle("!border-turq", on); b.classList.toggle("!bg-turq/15", on); b.classList.toggle("!text-white", on); }); $("#map-list").innerHTML = mapList(); drawMap(); return; }
@@ -602,9 +682,9 @@ document.addEventListener("submit", (e) => {
   if ("shopadd" in d) { S.shop.push({ id: uid(), name: String(fd.get("name")).trim().slice(0, 120), checked: false }); save(); render(true); return; }
   if ("recipe" in d) { const lines = (k) => String(fd.get(k) ?? "").split("\n").map((l) => l.trim()).filter(Boolean); S.recipes.unshift({ id: uid(), name: String(fd.get("name")).trim(), ing: lines("ing"), steps: lines("steps") }); save(); render(true); toast("Receta guardada"); }
 });
-document.addEventListener("keydown", (e) => { if (!bm) return; if (e.key === "Escape") closeBM(); if (e.key === "ArrowRight") bmAction("next"); if (e.key === "ArrowLeft") bmAction("prev"); });
+document.addEventListener("keydown", (e) => { if (wheel && e.key === "Escape") return closeWheel(); if (!bm) return; if (e.key === "Escape") closeBM(); if (e.key === "ArrowRight") bmAction("next"); if (e.key === "ArrowLeft") bmAction("prev"); });
 document.addEventListener("mouseover", (e) => { const el = e.target.closest("[data-tip]"); const tip = $("#map-tip"); if (!tip) return; if (el) { const c = country(el.dataset.tip), n = counts()[c.code]; tip.textContent = `${c.flag} ${c.name} · ${n} ${n === 1 ? "cóctel" : "cócteles"}`; } });
-window.addEventListener("hashchange", () => { if (bm) closeBM(); render(); });
+window.addEventListener("hashchange", () => { if (bm) closeBM(); if (wheel) closeWheel(); render(); });
 
 // ───────────── arranque ─────────────
 if (store.get("motion", "full") === "reduced") document.documentElement.dataset.motion = "reduced";
