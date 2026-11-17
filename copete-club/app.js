@@ -203,7 +203,7 @@ function viewHome() {
   <section class="relative grid items-center gap-6 md:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
     <div id="wheel-inline" class="flex flex-col items-center gap-5 text-center order-2" aria-label="Ruleta: descubre tu próximo cóctel"></div>
     <div class="flex flex-col gap-5 order-1"><p class="font-ui text-sm text-muted">Cóctel del día · ${esc(tco?.name)}</p>
-      <h1 class="neon-sign ignite text-[clamp(3.6rem,13vw,8.5rem)] uppercase" style="--neon:${neon}">${esc(t.international_name)}</h1>
+      <h1 class="neon-sign ignite text-[clamp(2.6rem,8vw,5rem)] uppercase" style="--neon:${neon}">${esc(t.international_name)}</h1>
       <p class="prose-club max-w-[46ch] text-muted">${esc(t.summary)}</p>
       <div class="flex flex-wrap items-center gap-4">${glass(t, 64, "ignite-svg shrink-0")}<a href="#c-${t.slug}" class="btn-ghost">Ver la receta y su historia</a></div></div></section>
   <section class="flex flex-col gap-5"><p class="font-display text-[clamp(2rem,6vw,3.4rem)] font-extrabold uppercase leading-[.9]">The world is your bar.</p>
