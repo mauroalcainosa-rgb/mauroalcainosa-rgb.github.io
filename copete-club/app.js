@@ -201,11 +201,11 @@ function viewHome() {
     <p class="font-ui text-[.95rem] uppercase tracking-[.14em] text-muted">El mundo de la coctelería te espera</p></div>
     ${countrySelect(`Estás en ${me?.flag ?? ""}`)}</section>
   <section class="relative grid items-center gap-6 md:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
-    <div class="relative flex justify-center md:order-2 md:justify-end"><div class="absolute inset-x-8 bottom-4 h-10 rounded-[50%] blur-2xl" style="background:${neon};opacity:.35"></div>${glass(t, 260, "relative ignite-svg h-auto w-40 sm:w-52 md:w-[260px]")}</div>
-    <div class="flex flex-col gap-5 md:order-1"><p class="font-ui text-sm text-muted">Cóctel del día · ${esc(tco?.name)}</p>
+    <div id="wheel-inline" class="flex flex-col items-center gap-5 text-center order-2" aria-label="Ruleta: descubre tu próximo cóctel"></div>
+    <div class="flex flex-col gap-5 order-1"><p class="font-ui text-sm text-muted">Cóctel del día · ${esc(tco?.name)}</p>
       <h1 class="neon-sign ignite text-[clamp(3.6rem,13vw,8.5rem)] uppercase" style="--neon:${neon}">${esc(t.international_name)}</h1>
       <p class="prose-club max-w-[46ch] text-muted">${esc(t.summary)}</p>
-      <div class="flex flex-wrap items-center gap-3"><button data-discover class="btn-neon">Descubrir mi próximo cóctel</button><a href="#c-${t.slug}" class="btn-ghost">Ver la receta y su historia</a></div></div></section>
+      <div class="flex flex-wrap items-center gap-4">${glass(t, 64, "ignite-svg shrink-0")}<a href="#c-${t.slug}" class="btn-ghost">Ver la receta y su historia</a></div></div></section>
   <section class="flex flex-col gap-5"><p class="font-display text-[clamp(2rem,6vw,3.4rem)] font-extrabold uppercase leading-[.9]">The world is your bar.</p>
     <form data-home-search class="relative max-w-2xl" role="search"><label for="hq" class="sr-only">Buscar recetas</label><span class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted">${ic(I.search)}</span>
     <input id="hq" name="q" placeholder="Busca por nombre, país o ingrediente: negroni, Perú, pisco…" class="field !rounded-full !py-3.5 !pl-12"></form>
@@ -530,27 +530,30 @@ function wheelSVG(items) {
     <g transform="translate(138 138) scale(.69)">${logo(64).replace(/<svg[^>]*>/, "").replace("</svg>", "")}</g>
   </svg>`;
 }
-function openWheel(filter = "") {
-  wheel = { filter, items: wheelPool(filter), rot: 0, spinning: false, result: null };
+function openWheel(filter = "", inline = false) {
+  wheel = { filter, inline, items: wheelPool(filter), rot: 0, spinning: false, result: null };
   renderWheel();
-  document.body.style.overflow = "hidden";
+  if (!inline) document.body.style.overflow = "hidden";
 }
-function closeWheel() { wheel = null; $("#wheel").innerHTML = ""; document.body.style.overflow = ""; }
-function renderWheel() {
-  const w = wheel, r = w.result;
+function closeWheel() { const inl = wheel?.inline; wheel = null; if (!inl) { $("#wheel").innerHTML = ""; document.body.style.overflow = ""; } }
+function wheelBody(w) {
+  const r = w.result;
   const chips = [["", "Con alcohol"], ["mock", "Sin alcohol"], ["pais", `De ${country(S.country)?.name ?? "mi país"}`], ["clasico", "Clásicos"]];
-  $("#wheel").innerHTML = `<div role="dialog" aria-modal="true" aria-label="Ruleta de cócteles" class="fixed inset-0 z-[110] flex flex-col overflow-y-auto bg-ink/95 backdrop-blur-md">
-  <div class="flex items-center justify-between px-4 py-3"><p class="font-display text-2xl font-bold uppercase">Tu próximo cóctel</p><button data-wheel="close" class="btn-ghost !py-2">Cerrar</button></div>
-  <div class="mx-auto flex w-full max-w-md flex-1 flex-col items-center gap-5 px-5 pb-10">
-    <div class="flex flex-wrap justify-center gap-2">${chips.map(([k, l]) => `<button data-wheelfilter="${k}" aria-pressed="${w.filter === k}" ${w.spinning ? "disabled" : ""} class="chip">${esc(l)}</button>`).join("")}</div>
+  return `<div class="flex flex-wrap justify-center gap-2">${chips.map(([k, l]) => `<button data-wheelfilter="${k}" aria-pressed="${w.filter === k}" ${w.spinning ? "disabled" : ""} class="chip">${esc(l)}</button>`).join("")}</div>
     <div class="relative w-full max-w-[22rem]">
       <svg viewBox="0 0 40 40" class="absolute left-1/2 top-[-6px] z-10 h-9 w-9 -translate-x-1/2" aria-hidden="true"><path d="M8 4 L32 4 L20 30 Z" fill="#ff2ba6" stroke="#fff" stroke-width="1.5" stroke-linejoin="round" style="filter:drop-shadow(0 0 6px #ff2ba6)"/></svg>
       ${wheelSVG(w.items)}
     </div>
-    ${r ? `<div class="surface flex w-full items-center gap-4 border-fuchsia/40 p-4">${glass(r, 70)}<div class="flex min-w-0 flex-col gap-1"><p class="font-ui text-sm text-muted">${country(r.origin_country)?.flag ?? ""} ${esc(country(r.origin_country)?.name)}</p><p class="neon-sign text-4xl uppercase" style="--neon:${neonColor(r.color)}">${esc(r.international_name)}</p><p class="text-sm text-muted">${esc(r.summary)}</p></div></div>
+    <div aria-live="polite" class="flex w-full flex-col gap-3">${r ? `<div class="surface flex w-full items-center gap-4 border-fuchsia/40 p-4 text-left">${glass(r, 70)}<div class="flex min-w-0 flex-col gap-1"><p class="font-ui text-sm text-muted">${country(r.origin_country)?.flag ?? ""} ${esc(country(r.origin_country)?.name)}</p><p class="neon-sign text-4xl uppercase" style="--neon:${neonColor(r.color)}">${esc(r.international_name)}</p><p class="text-sm text-muted">${esc(r.summary)}</p></div></div>
       <div class="flex w-full gap-3"><button data-wheel="spin" class="btn-ghost flex-1">Girar de nuevo</button><a href="#c-${r.slug}" class="btn-neon flex-1">Ver receta</a></div>`
-    : `<button data-wheel="spin" ${w.spinning ? "disabled" : ""} class="btn-neon w-full !py-4 text-lg">${w.spinning ? "Girando…" : "Girar la ruleta"}</button>`}
-  </div></div>`;
+    : `<button data-wheel="spin" ${w.spinning ? "disabled" : ""} class="btn-neon w-full !py-4 text-lg">${w.spinning ? "Girando…" : "Descubrir mi próximo cóctel"}</button>`}</div>`;
+}
+function renderWheel() {
+  const w = wheel;
+  if (w.inline) { const el = $("#wheel-inline"); if (el) el.innerHTML = wheelBody(w); return; }
+  $("#wheel").innerHTML = `<div role="dialog" aria-modal="true" aria-label="Ruleta de cócteles" class="fixed inset-0 z-[110] flex flex-col overflow-y-auto bg-ink/95 backdrop-blur-md">
+  <div class="flex items-center justify-between px-4 py-3"><p class="font-display text-2xl font-bold uppercase">Tu próximo cóctel</p><button data-wheel="close" class="btn-ghost !py-2">Cerrar</button></div>
+  <div class="mx-auto flex w-full max-w-md flex-1 flex-col items-center gap-5 px-5 pb-10">${wheelBody(w)}</div></div>`;
 }
 function spinWheel() {
   const w = wheel; if (!w || w.spinning) return;
@@ -622,6 +625,7 @@ function render(keepScroll = false) {
   $("#main").innerHTML = v;
   if (keepScroll) window.scrollTo(0, y); else window.scrollTo(0, 0);
   if (r === "world-tour") drawMap();
+  if (r === "inicio") { if (!wheel?.inline || wheel.spinning) openWheel(wheel?.inline ? wheel.filter : "", true); else renderWheel(); }
   const t = { inicio: "Home", explore: "Explore", "world-tour": "Cocktail World Tour", "mixology-ai": "Mixology AI", "my-bar": "My Bar", mocktails: "Mocktails", profile: "Profile", suscripcion: "Mi suscripción" }[r] ?? (r.startsWith("c-") ? cocktail(r.slice(2))?.international_name : r.startsWith("pais-") ? country(r.slice(5).toUpperCase())?.name : "");
   document.title = `${t ? t + " · " : ""}Copete Club`;
 }
@@ -682,9 +686,9 @@ document.addEventListener("submit", (e) => {
   if ("shopadd" in d) { S.shop.push({ id: uid(), name: String(fd.get("name")).trim().slice(0, 120), checked: false }); save(); render(true); return; }
   if ("recipe" in d) { const lines = (k) => String(fd.get(k) ?? "").split("\n").map((l) => l.trim()).filter(Boolean); S.recipes.unshift({ id: uid(), name: String(fd.get("name")).trim(), ing: lines("ing"), steps: lines("steps") }); save(); render(true); toast("Receta guardada"); }
 });
-document.addEventListener("keydown", (e) => { if (wheel && e.key === "Escape") return closeWheel(); if (!bm) return; if (e.key === "Escape") closeBM(); if (e.key === "ArrowRight") bmAction("next"); if (e.key === "ArrowLeft") bmAction("prev"); });
+document.addEventListener("keydown", (e) => { if (wheel && !wheel.inline && e.key === "Escape") return closeWheel(); if (!bm) return; if (e.key === "Escape") closeBM(); if (e.key === "ArrowRight") bmAction("next"); if (e.key === "ArrowLeft") bmAction("prev"); });
 document.addEventListener("mouseover", (e) => { const el = e.target.closest("[data-tip]"); const tip = $("#map-tip"); if (!tip) return; if (el) { const c = country(el.dataset.tip), n = counts()[c.code]; tip.textContent = `${c.flag} ${c.name} · ${n} ${n === 1 ? "cóctel" : "cócteles"}`; } });
-window.addEventListener("hashchange", () => { if (bm) closeBM(); if (wheel) closeWheel(); render(); });
+window.addEventListener("hashchange", () => { if (bm) closeBM(); if (wheel && !wheel.inline) closeWheel(); else if (wheel?.inline) wheel = null; render(); });
 
 // ───────────── arranque ─────────────
 if (store.get("motion", "full") === "reduced") document.documentElement.dataset.motion = "reduced";
