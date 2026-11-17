@@ -692,8 +692,8 @@ window.addEventListener("hashchange", () => { if (bm) closeBM(); if (wheel && !w
 
 // ───────────── arranque ─────────────
 if (store.get("motion", "full") === "reduced") document.documentElement.dataset.motion = "reduced";
-fetch("data.json").then((r) => r.json()).then((d) => {
+fetch("data.json?v=2").then((r) => r.json()).then((d) => {
   DATA = d; render();
-  fetch("world.json").then((r) => r.json()).then((w) => { WORLD = w; if (route() === "world-tour") drawMap(); }).catch(() => {});
+  fetch("world.json?v=2").then((r) => r.json()).then((w) => { WORLD = w; if (route() === "world-tour") drawMap(); }).catch(() => {});
 }).catch(() => { $("#main").innerHTML = `<p class="p-6 text-danger">No se pudo cargar el catálogo. Recarga la página.</p>`; });
 })();
