@@ -40,6 +40,7 @@ const CONTINENTS = [
 ];
 const KIND = { original: "Receta original", variacion_tradicional: "Variación tradicional", adaptacion_moderna: "Adaptación moderna", creacion_club: "Creación original del club", comunidad: "Creación de la comunidad" };
 const DIFF = ["", "Fácil", "Media", "Avanzada"];
+const METHOD = (k) => DATA.methods?.find((m) => m.key === k);
 const AXES = [["flavor_sweet", "Dulce"], ["flavor_sour", "Ácido"], ["flavor_bitter", "Amargo"], ["flavor_dry", "Seco"], ["flavor_fruity", "Frutal"], ["flavor_spicy", "Especiado"], ["flavor_strength", "Intensidad"]];
 const OCC = { aperitivo: "Aperitivo", cena: "Cena", sobremesa: "Sobremesa", brunch: "Brunch", fiesta: "Fiesta", celebracion: "Celebración", tarde: "Tarde", noche: "Noche", verano: "Verano", invierno: "Invierno" };
 const SEAS = { verano: "Verano", otono: "Otoño", invierno: "Invierno", primavera: "Primavera", "todo-el-ano": "Todo el año" };
@@ -156,6 +157,7 @@ function search(f = {}) {
     if (f.occasion && !c.occasions.includes(f.occasion)) return false;
     if (f.season && !c.seasons.includes(f.season)) return false;
     if (f.era && c.era !== f.era) return false;
+    if (f.method && c.prep_method !== f.method) return false;
     if (f.type === "mocktail" && !c.is_mocktail) return false;
     if (f.type === "alcohol" && c.is_mocktail) return false;
     return true;
@@ -233,12 +235,13 @@ function sel(name, label, opts) {
 function viewExplore() {
   const f = S.filters, res = search(f), active = Object.values(f).some(Boolean);
   return `<div class="flex flex-col gap-8"><header><h1 class="font-display text-[clamp(3rem,10vw,5.5rem)] font-extrabold uppercase leading-[.85]">Explore</h1>
-  <p class="mt-2 max-w-[60ch] text-muted">Combina filtros para encontrar tu próximo cóctel entre más de 100 recetas de todo el mundo.</p></header>
+  <p class="mt-2 max-w-[60ch] text-muted">Combina filtros para encontrar tu próximo cóctel entre más de 170 recetas de todo el mundo.</p></header>
   <div class="surface flex flex-col gap-5 p-4 sm:p-5">
     <input data-filter="q" value="${esc(f.q ?? "")}" class="field !rounded-full" placeholder="Nombre, país, ingrediente o creador" aria-label="Buscar">
     <div class="flex flex-col gap-2"><p class="font-ui text-sm text-muted">Perfil de sabor</p><div class="flex flex-wrap gap-2">${FLAV.map(([k, l]) => `<button data-flavor="${k}" aria-pressed="${(f.flavor ?? "") === k}" class="chip">${l}</button>`).join("")}</div></div>
     <div class="grid grid-cols-2 gap-3 md:grid-cols-4">
       ${sel("type", "Tipo", [["", "Todos"], ["alcohol", "Con alcohol"], ["mocktail", "Mocktails"]])}
+      ${sel("method", "Cómo se prepara", [["", "Cualquier forma"], ...(DATA.methods ?? []).map((m) => [m.key, m.label])])}
       ${sel("era", "Estilo", [["", "Todos"], ["clasico", "Clásicos"], ["moderno", "Modernos"], ["tradicional", "Tradicionales"]])}
       ${sel("continent", "Continente", [["", "Todos"], ...CONTINENTS])}
       ${sel("country", "País", [["", "Todos"], ...DATA.countries.map((c) => [c.code, `${c.flag} ${c.name}`])])}
@@ -278,6 +281,16 @@ function twist(c) {
   }).join("");
 }
 
+function methodCard(c) {
+  const m = METHOD(c.prep_method); if (!m) return "";
+  const tech = c.technique && fold(c.technique) !== fold(m.label) ? ` Técnica de esta receta: ${esc(c.technique.toLowerCase())}.` : "";
+  return `<div class="surface flex flex-col gap-4 border-l-2 !border-l-turq p-5">
+    <div><p class="font-ui text-sm text-faint">Cómo se prepara</p><p class="font-display text-3xl font-bold uppercase text-turq">${esc(m.label)}</p>
+    <p class="mt-1 text-muted">${esc(m.short)}${tech}</p></div>
+    <div class="grid gap-5 md:grid-cols-2"><div><p class="font-ui text-sm text-faint">Necesitas</p><ul class="mt-2 flex flex-wrap gap-2">${(c.tools ?? []).map((t) => `<li class="chip">${esc(t)}</li>`).join("")}</ul></div>
+    <div><p class="font-ui text-sm text-faint">La técnica, en general</p><ol class="mt-2 list-decimal pl-5 text-[.98rem]">${m.how.map((h) => `<li>${esc(h)}</li>`).join("")}</ol></div></div>
+    <p class="font-ui text-sm text-gold">${esc(m.alt)}</p></div>`;
+}
 let servings = 1;
 function viewCocktail(slug) {
   const c = cocktail(slug); if (!c) return viewNotFound();
@@ -305,6 +318,7 @@ function viewCocktail(slug) {
   <section class="flex flex-col gap-6"><div class="flex flex-wrap items-end justify-between gap-4"><h2 id="receta" class="font-display text-5xl font-bold uppercase">Receta</h2>
     <div class="flex flex-wrap items-center gap-3"><div class="inline-flex items-center rounded-full border border-white/15 font-ui" role="group" aria-label="Porciones"><button data-serv="-1" class="px-3.5 py-2 text-lg">−</button><span id="serv" class="min-w-[6.5rem] text-center text-sm" aria-live="polite">1 porción</span><button data-serv="1" class="px-3.5 py-2 text-lg">+</button></div>
     <button data-bmode="${slug}" class="btn-neon whitespace-nowrap !py-3">Modo bartender</button></div></div>
+    ${methodCard(c)}
     <div class="grid gap-6 md:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)]"><ul id="ings" class="surface divide-y divide-white/[.06] p-2">${ingRows(c)}</ul>
     <ol class="flex flex-col gap-4">${c.steps.map((s) => `<li class="grid grid-cols-[2.2rem_1fr] gap-3"><span class="font-display text-3xl font-bold leading-none text-fuchsia">${s.position}</span><p class="pt-1">${esc(s.instruction)}${s.timer_seconds ? `<span class="ml-2 inline-flex items-center gap-1 font-ui text-sm text-gold">${ic(I.clock, "h-4 w-4")}${fmtT(s.timer_seconds)}</span>` : ""}</p></li>`).join("")}</ol></div>
     <dl class="grid grid-cols-2 gap-3 font-ui text-sm sm:grid-cols-4">${[["Técnica", c.technique], ["Hielo", c.ice], ["Vaso", c.glass], ["Decoración", c.garnish]].map(([k, v]) => `<div class="rounded-xl border border-white/[.07] p-3"><dt class="text-faint">${k}</dt><dd class="mt-1 text-[.98rem] text-text">${esc(v ?? "—")}</dd></div>`).join("")}</dl>
@@ -589,7 +603,8 @@ function renderBM() {
   <div class="h-1 bg-white/5"><div class="h-full bg-fuchsia shadow-[0_0_10px_#ff2ba6]" style="width:${((i + 1) / total) * 100}%"></div></div>
   <div class="flex flex-1 flex-col items-center justify-center gap-6 overflow-y-auto px-5 py-8 text-center">${i === -1 ? `<div>${glass(c, 150)}</div><p class="font-ui text-muted">Prepara todo antes de empezar</p>
     <ul class="w-full max-w-md text-left">${c.ingredients.map((x) => `<li class="flex justify-between gap-3 border-b border-white/[.07] py-2.5 text-lg"><span>${esc(x.name)}</span><span class="font-ui font-semibold text-turq">${esc(amount(x, servings))}</span></li>`).join("")}</ul>
-    <p class="font-ui text-sm text-muted">${servings} ${servings === 1 ? "porción" : "porciones"} · ${esc(c.glass)} · Hielo: ${esc(c.ice ?? "—")}</p>`
+    <p class="font-ui text-sm text-muted">${servings} ${servings === 1 ? "porción" : "porciones"} · ${esc(METHOD(c.prep_method)?.label ?? c.technique ?? "")} · ${esc(c.glass)} · Hielo: ${esc(c.ice ?? "—")}</p>
+    ${c.tools?.length ? `<p class="font-ui text-sm text-muted">Necesitas: ${esc(c.tools.join(", "))}</p>` : ""}`
   : `<p class="font-ui text-lg text-fuchsia">Paso ${i + 1} de ${total}</p><p class="max-w-[24ch] font-display text-[clamp(2.2rem,8vw,4rem)] font-bold leading-[1.02]">${esc(st.instruction)}</p>
     ${st.timer_seconds ? `<div class="flex flex-col items-center gap-3"><p class="font-display text-6xl font-bold tabular-nums text-gold" aria-live="polite">${fmtT(bm.left ?? st.timer_seconds)}</p><button data-bm="timer" class="btn-ghost">${bm.timer ? "Detener temporizador" : "Iniciar temporizador"}</button></div>` : ""}
     ${fin && c.garnish ? `<p class="font-ui text-muted">Decoración: ${esc(c.garnish)}</p>` : ""}`}</div>
@@ -694,7 +709,7 @@ window.addEventListener("hashchange", () => { if (bm) closeBM(); if (wheel && !w
 
 // ───────────── arranque ─────────────
 if (store.get("motion", "full") === "reduced") document.documentElement.dataset.motion = "reduced";
-fetch("data.json?v=3").then((r) => r.json()).then((d) => {
+fetch("data.json?v=4").then((r) => r.json()).then((d) => {
   DATA = d; render();
   fetch("world.json?v=2").then((r) => r.json()).then((w) => { WORLD = w; if (route() === "world-tour") drawMap(); }).catch(() => {});
 }).catch(() => { $("#main").innerHTML = `<p class="p-6 text-danger">No se pudo cargar el catálogo. Recarga la página.</p>`; });
