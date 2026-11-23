@@ -37,7 +37,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898733+github-actions[bot]@users.noreply.github.com"
           git checkout --orphan copete-android-build
-          git rm -rq --cached .
+          git rm -rqf --cached .
           cp /tmp/out/app-release-unsigned.aab .
           git add app-release-unsigned.aab
           git commit -qm "AAB sin firmar de ${GITHUB_SHA::7}"
