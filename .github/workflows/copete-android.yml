@@ -6,6 +6,9 @@ on:
     paths: ["copete-club-android/**", ".github/workflows/copete-android.yml"]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -27,3 +30,15 @@ jobs:
           name: copete-club-release
           path: |
             copete-club-android/app/build/outputs/bundle/release/*.aab
+      - name: Guardar el AAB en la rama copete-android-build
+        working-directory: .
+        run: |
+          mkdir -p /tmp/out && cp copete-club-android/app/build/outputs/bundle/release/*.aab /tmp/out/app-release-unsigned.aab
+          git config user.name "github-actions[bot]"
+          git config user.email "41898733+github-actions[bot]@users.noreply.github.com"
+          git checkout --orphan copete-android-build
+          git rm -rq --cached .
+          cp /tmp/out/app-release-unsigned.aab .
+          git add app-release-unsigned.aab
+          git commit -qm "AAB sin firmar de ${GITHUB_SHA::7}"
+          git push -f origin copete-android-build
