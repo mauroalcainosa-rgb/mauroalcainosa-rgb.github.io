@@ -175,10 +175,10 @@ function card(c, wide = false) {
     ${c.is_mocktail ? `<span class="absolute left-3 top-3 chip !border-turq/50 !text-turq">0,0 %</span>` : ""}${S.fav.has(c.slug) ? `<span class="absolute right-3 top-3 text-fuchsia">${ic(I.heart, "h-5 w-5", "currentColor")}</span>` : ""}</div>
     <div class="flex flex-1 flex-col gap-1.5 p-4 pt-3"><h3 class="font-display text-[1.6rem] font-bold leading-[.95]">${esc(c.international_name)}</h3>
     <p class="font-ui text-sm text-muted">${co?.flag ?? ""} ${esc(co?.name ?? "")}</p>
-    <div class="mt-auto flex items-center justify-between pt-2 font-ui text-[.8rem] text-muted"><span class="inline-flex items-center gap-2">${dots(c.difficulty)}${DIFF[c.difficulty]}</span>${notes.length ? `<span class="text-turq/90">${notes.join(" y ")}</span>` : ""}</div></div></a>`;
+    <div class="mt-auto flex flex-wrap items-center justify-between gap-x-2 gap-y-1 pt-2 font-ui text-[.8rem] text-muted"><span class="inline-flex items-center gap-2">${dots(c.difficulty)}${DIFF[c.difficulty]}</span>${notes.length ? `<span class="text-turq/90">${notes.join(" y ")}</span>` : ""}</div></div></a>`;
 }
 const grid = (list) => `<div class="reveal grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">${list.map((c) => card(c)).join("")}</div>`;
-const shelf = (title, list, href, note) => `<section class="flex flex-col gap-4"><div class="flex items-baseline justify-between gap-4"><div><h2 class="font-display text-4xl font-bold uppercase">${title}</h2>${note ? `<p class="font-ui text-sm text-muted">${note}</p>` : ""}</div>${href ? `<a href="${href}" class="shrink-0 font-ui text-sm text-turq hover:underline">Ver todos</a>` : ""}</div><div class="scroll-x reveal -mx-4 flex gap-3 px-4 pb-2 sm:-mx-6 sm:px-6">${list.map((c) => card(c, true)).join("")}</div></section>`;
+const shelf = (title, list, href, note) => `<section class="flex flex-col gap-4"><div class="flex items-baseline justify-between gap-4"><div class="min-w-0"><h2 class="font-display text-[clamp(1.9rem,8.5vw,2.25rem)] font-bold uppercase leading-[.95] [overflow-wrap:anywhere]">${title}</h2>${note ? `<p class="font-ui text-sm text-muted">${note}</p>` : ""}</div>${href ? `<a href="${href}" class="shrink-0 font-ui text-sm text-turq hover:underline">Ver todos</a>` : ""}</div><div class="scroll-x reveal -mx-4 flex gap-3 px-4 pb-2 sm:-mx-6 sm:px-6">${list.map((c) => card(c, true)).join("")}</div></section>`;
 const countrySelect = (label, id = "country-select") => `<label class="inline-flex items-center gap-2 font-ui text-sm text-muted"><span>${label}</span><select data-country id="${id}" class="rounded-full border border-white/15 bg-smoke px-3 py-1.5 font-ui text-sm text-white">
   <optgroup label="Mercados con Local Twist">${DATA.countries.filter((c) => c.is_market).map((c) => `<option value="${c.code}" ${c.code === S.country ? "selected" : ""}>${c.flag} ${esc(c.name)}</option>`).join("")}</optgroup>
   <optgroup label="Otros países">${DATA.countries.filter((c) => !c.is_market).map((c) => `<option value="${c.code}" ${c.code === S.country ? "selected" : ""}>${c.flag} ${esc(c.name)}</option>`).join("")}</optgroup></select></label>`;
@@ -215,9 +215,9 @@ function viewHome() {
   ${shelf("Populares en el club", popular, "#explore")}
   ${shelf(`Para ti en ${esc(me?.name ?? "tu país")}`, recs(), null, S.fav.size ? "Según tus favoritos" : "Según tu país")}
   <section class="flex flex-col gap-4"><div class="flex items-baseline justify-between"><h2 class="font-display text-4xl font-bold uppercase">Explora por países</h2><a href="#world-tour" class="font-ui text-sm text-turq hover:underline">Abrir el mapa</a></div>
-    <ul class="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">${DATA.countries.filter((c) => c.in_world_tour).map((c) => `<li><a href="#pais-${c.code.toLowerCase()}" class="flex items-center gap-3 rounded-xl border border-white/[.07] px-4 py-3 transition-colors hover:border-turq/60 hover:bg-turq/5"><span class="text-2xl">${c.flag}</span><span class="font-display text-xl font-semibold uppercase">${esc(c.name)}</span></a></li>`).join("")}</ul></section>
+    <ul class="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">${DATA.countries.filter((c) => c.in_world_tour).map((c) => `<li><a href="#pais-${c.code.toLowerCase()}" class="flex items-center gap-3 rounded-xl border border-white/[.07] px-4 py-3 transition-colors hover:border-turq/60 hover:bg-turq/5"><span class="text-2xl">${c.flag}</span><span class="min-w-0 font-display text-xl font-semibold uppercase leading-none [overflow-wrap:anywhere]">${esc(c.name)}</span></a></li>`).join("")}</ul></section>
   <section class="surface relative overflow-hidden p-6 sm:p-8"><div class="absolute -right-10 -top-10 h-48 w-48 rounded-full bg-violet/25 blur-3xl"></div><div class="relative flex flex-col gap-4">
-    <h2 class="flex items-center gap-3 font-display text-4xl font-bold uppercase"><span class="text-violet-soft">${ic(I.spark, "h-8 w-8")}</span>Mixology AI</h2>
+    <h2 class="flex items-center gap-3 font-display text-[clamp(1.9rem,8.5vw,2.25rem)] font-bold uppercase"><span class="text-violet-soft">${ic(I.spark, "h-8 w-8")}</span>Mixology AI</h2>
     <p class="max-w-[52ch] text-muted">Dile al bartender qué tienes en casa o qué te provoca, y te propone un cóctel de la biblioteca con su receta y alternativas locales.</p>
     <form data-ask class="flex max-w-2xl flex-col gap-2 sm:flex-row"><input name="q" class="field !rounded-full" placeholder="Tengo ron, menta y azúcar. ¿Qué puedo hacer?"><button class="btn-neon shrink-0">Preguntar</button></form></div></section>
   ${shelf("Últimos descubrimientos", search({ era: "moderno" }).slice(0, 8), "#explore")}
@@ -718,7 +718,7 @@ function ageGate() {
     <div class="surface flex w-full max-w-sm flex-col items-center gap-5 p-8 text-center">${logo(64)}
     <h2 id="age-t" class="font-display text-4xl font-bold uppercase">¿Tienes 18 años o más?</h2>
     <p class="text-muted">Copete Club tiene recetas con alcohol y es solo para personas mayores de edad.</p>
-    <div class="grid w-full grid-cols-2 gap-3"><button data-age="no" class="btn-ghost">No</button><button data-age="yes" class="btn-neon">Sí, tengo 18+</button></div>
+    <div class="flex w-full flex-col gap-3"><button data-age="yes" class="btn-neon w-full">Sí, tengo 18 o más</button><button data-age="no" class="btn-ghost w-full">No</button></div>
     <p id="age-no" class="hidden font-ui text-sm text-gold">Vuelve cuando cumplas 18. Mientras, no podemos mostrarte el contenido.</p></div></div>`;
   document.body.appendChild(el); document.body.style.overflow = "hidden";
   el.addEventListener("click", (e) => {

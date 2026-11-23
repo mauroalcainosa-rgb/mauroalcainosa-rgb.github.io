@@ -1,5 +1,5 @@
 /* Copete Club: funciona sin conexión después de la primera visita. */
-const CACHE = "copete-v1";
+const CACHE = "copete-v2";
 const SHELL = ["./", "index.html", "app.js", "data.json", "world.json", "manifest.webmanifest", "privacidad.html", "icons/icon-192.png", "icons/icon-512.png"];
 self.addEventListener("install", (e) => { e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting())); });
 self.addEventListener("activate", (e) => { e.waitUntil(caches.keys().then((ks) => Promise.all(ks.filter((k) => k !== CACHE).map((k) => caches.delete(k)))).then(() => self.clients.claim())); });
