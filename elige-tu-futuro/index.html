@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Elige tu futuro: buscador y orientación de educación superior en Chile. Gratis para estudiantes.">
+<meta name="theme-color" content="#2D5BFF">
+<title>Elige tu futuro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --azul:#2D5BFF;--morado:#7B3FF2;--turq:#14C8B8;--ink:#141B34;--muted:#5B6480;--line:#E4E8F2;
+  --bg:#F5F7FC;--card:#fff;--ok:#12A36B;--warn:#E09A12;--bad:#E04848;
+  --grad:linear-gradient(135deg,#2D5BFF 0%,#7B3FF2 60%,#14C8B8 130%);
+  --r:16px;--sh:0 2px 10px rgba(20,27,52,.06),0 8px 24px rgba(20,27,52,.05);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--ink);font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:15px;line-height:1.45}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+a{color:var(--azul)}
+#app{max-width:760px;margin:0 auto;min-height:100vh;padding-bottom:84px}
+.top{position:sticky;top:0;z-index:20;background:rgba(245,247,252,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;padding:10px 16px}
+.logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:17px;cursor:pointer}
+.logo i{width:30px;height:30px;border-radius:9px;background:var(--grad);display:grid;place-items:center;color:#fff;font-style:normal;font-size:16px}
+.top .sp{flex:1}
+.pill-demo{font-size:11px;font-weight:700;background:#FFF4DB;color:#8A5A00;border:1px solid #F5D88E;padding:3px 8px;border-radius:99px;white-space:nowrap}
+.wrap{padding:16px}
+h1{font-size:26px;line-height:1.15;font-weight:800;letter-spacing:-.02em}
+h2{font-size:19px;font-weight:800;letter-spacing:-.01em;margin:22px 0 10px}
+h3{font-size:16px;font-weight:700}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.xs{font-size:12px}
+.hero{background:var(--grad);color:#fff;border-radius:22px;padding:24px 20px 20px;position:relative;overflow:hidden}
+.hero:after{content:"";position:absolute;right:-60px;top:-60px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.12)}
+.hero:before{content:"";position:absolute;right:40px;bottom:-80px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.08)}
+.hero p{opacity:.92;margin-top:6px;position:relative;z-index:1}
+.hero h1{position:relative;z-index:1}
+.search{display:flex;align-items:center;gap:8px;background:#fff;border-radius:14px;padding:4px 4px 4px 14px;margin-top:16px;box-shadow:var(--sh);position:relative;z-index:1}
+.search input{flex:1;border:0;outline:0;padding:10px 0;min-width:0;color:var(--ink)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border-radius:12px;padding:10px 14px;font-weight:700;font-size:14px;transition:.15s}
+.btn.pri{background:var(--azul);color:#fff}
+.btn.pri:hover{background:#1f47e0}
+.btn.sec{background:#EEF2FF;color:var(--azul)}
+.btn.ghost{border:1px solid var(--line);background:#fff}
+.btn.sm{padding:7px 10px;font-size:13px;border-radius:10px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.grid4{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.tile{background:var(--card);border-radius:var(--r);padding:16px;box-shadow:var(--sh);text-align:left;display:flex;flex-direction:column;gap:6px;border:1px solid transparent;transition:.15s}
+.tile:hover{border-color:#C9D4FF;transform:translateY(-1px)}
+.tile .ic{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:20px}
+.tile b{font-size:15px}
+.tile span{font-size:12.5px;color:var(--muted)}
+.card{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:16px;margin-bottom:12px}
+.ccard{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:14px 14px 12px;margin-bottom:12px;border:1px solid transparent;cursor:pointer;transition:.15s}
+.ccard:hover{border-color:#C9D4FF}
+.ccard .row1{display:flex;gap:10px;align-items:flex-start}
+.ccard .badge-area{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-size:20px;flex-shrink:0}
+.ccard h3{font-size:15.5px;line-height:1.25}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.chip{font-size:11.5px;font-weight:600;padding:3px 8px;border-radius:99px;background:#F0F2F8;color:#3B4363;white-space:nowrap}
+.chip.g{background:#E3F7EE;color:#0B7A4F}
+.chip.b{background:#EAF0FF;color:#2449CC}
+.chip.p{background:#F1EAFF;color:#5B2BC4}
+.chip.t{background:#DDF7F4;color:#0A7F74}
+.chip.w{background:#FFF4DB;color:#8A5A00}
+.chip.r{background:#FDE8E8;color:#B42323}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.kpi{background:#F7F8FC;border-radius:10px;padding:8px}
+.kpi small{display:block;font-size:11px;color:var(--muted)}
+.kpi b{font-size:14px}
+.acts{display:flex;gap:6px;margin-top:10px}
+.iconbtn{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:#F3F5FB;font-size:17px}
+.iconbtn.on{background:#FFE9EF;color:#D6336C}
+.iconbtn.onc{background:#EAF0FF;color:var(--azul)}
+.filters{display:flex;gap:8px;overflow-x:auto;padding:2px 0 10px;scrollbar-width:none}
+.filters::-webkit-scrollbar{display:none}
+.fbtn{white-space:nowrap;border:1px solid var(--line);background:#fff;border-radius:99px;padding:7px 12px;font-size:13px;font-weight:600}
+.fbtn.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.panel{background:#fff;border-radius:var(--r);box-shadow:var(--sh);padding:14px;margin-bottom:12px}
+.fgroup{margin-bottom:12px}
+.fgroup>label{display:block;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
+.opts{display:flex;flex-wrap:wrap;gap:6px}
+.opt{border:1px solid var(--line);background:#fff;border-radius:10px;padding:6px 10px;font-size:13px;font-weight:600}
+.opt.on{background:#EAF0FF;border-color:var(--azul);color:var(--azul)}
+select,.inp{width:100%;border:1px solid var(--line);border-radius:10px;padding:9px 10px;background:#fff}
+.nav{position:fixed;bottom:0;left:0;right:0;z-index:30;background:#fff;border-top:1px solid var(--line);display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom)}
+.nav .in{display:flex;max-width:760px;width:100%}
+.nav button{flex:1;padding:8px 0 10px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;font-weight:600;color:var(--muted);position:relative}
+.nav button .e{font-size:20px;line-height:1.2}
+.nav button.on{color:var(--azul)}
+.nav button .cnt{position:absolute;top:4px;right:calc(50% - 22px);background:var(--morado);color:#fff;font-size:10px;border-radius:99px;padding:0 5px;min-width:16px}
+.ad{border:1px dashed #C5CBDB;border-radius:14px;padding:12px;background:repeating-linear-gradient(45deg,#FAFBFE,#FAFBFE 10px,#F4F6FB 10px,#F4F6FB 20px);margin:14px 0;position:relative}
+.ad .lbl{position:absolute;top:-9px;left:12px;background:#fff;border:1px solid #C5CBDB;border-radius:6px;font-size:10px;font-weight:800;letter-spacing:.06em;color:#6A7290;padding:1px 6px}
+.ad .body{display:flex;gap:10px;align-items:center}
+.ad .thumb{width:46px;height:46px;border-radius:10px;background:#E4E8F2;display:grid;place-items:center;font-size:20px;flex-shrink:0}
+.ad .slot{font-size:10.5px;color:#8B92AA;margin-top:6px;font-family:ui-monospace,monospace}
+.sheet-bg{position:fixed;inset:0;background:rgba(14,18,38,.45);z-index:50;display:flex;align-items:flex-end;justify-content:center;animation:fade .15s}
+.sheet{background:var(--bg);width:100%;max-width:760px;max-height:92vh;overflow:auto;border-radius:22px 22px 0 0;animation:up .2s}
+.sheet .hd{position:sticky;top:0;background:var(--grad);color:#fff;padding:18px 16px 16px;border-radius:22px 22px 0 0;z-index:2}
+.sheet .x{position:absolute;right:12px;top:12px;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.2);color:#fff;font-size:18px;z-index:5}
+.sheet .hd>div,.sheet .hd>h2{padding-right:40px}
+@keyframes up{from{transform:translateY(40px);opacity:.4}}
+@keyframes fade{from{opacity:0}}
+.sec{background:#fff;border-radius:14px;padding:14px;margin:10px 12px;box-shadow:var(--sh)}
+.sec h3{margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.dl{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:13.5px}
+.dl dt{color:var(--muted)}
+.dl dd{font-weight:600;text-align:right}
+.na{color:#9AA1B8;font-style:italic;font-weight:500}
+.src{font-size:11px;color:#8B92AA;margin-top:8px;border-top:1px dashed var(--line);padding-top:6px}
+.bar{height:8px;border-radius:99px;background:#EDF0F7;overflow:hidden}
+.bar>i{display:block;height:100%;border-radius:99px;background:var(--grad)}
+.sem{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px}
+.sem div{min-width:150px;background:#F7F8FC;border-radius:10px;padding:8px;font-size:12px}
+.sem b{display:block;font-size:12px;color:var(--azul);margin-bottom:4px}
+.status{border-radius:12px;padding:10px 12px;font-size:13.5px;font-weight:600;display:flex;gap:8px;align-items:flex-start}
+.status.ok{background:#E3F7EE;color:#0B6B46}
+.status.mid{background:#FFF4DB;color:#7A5000}
+.status.bad{background:#FDE8E8;color:#9E1F1F}
+.status.info{background:#EAF0FF;color:#2449CC}
+.disc{font-size:12px;color:var(--muted);background:#F7F8FC;border-radius:10px;padding:8px 10px;margin-top:8px}
+table.cmp{width:100%;border-collapse:separate;border-spacing:0;font-size:13px;background:#fff;border-radius:14px;overflow:hidden;box-shadow:var(--sh)}
+table.cmp th,table.cmp td{padding:9px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.cmp th{background:#F7F8FC;font-size:11.5px;color:var(--muted);font-weight:700;position:sticky;left:0;min-width:96px}
+table.cmp td.best{background:#E9F9F1;color:#0B6B46;font-weight:700}
+.scroll-x{overflow-x:auto;border-radius:14px}
+.q{background:#fff;border-radius:18px;padding:20px;box-shadow:var(--sh)}
+.qopts{display:grid;gap:10px;margin-top:14px}
+.qopt{text-align:left;border:2px solid var(--line);background:#fff;border-radius:14px;padding:12px 14px;font-weight:600;display:flex;gap:10px;align-items:center;transition:.12s}
+.qopt:hover{border-color:var(--azul);background:#F6F8FF}
+.qopt .em{font-size:22px}
+.prog{height:6px;background:#E4E8F2;border-radius:99px;overflow:hidden;margin:10px 0 16px}
+.prog i{display:block;height:100%;background:var(--grad);transition:.3s}
+.chat{display:flex;flex-direction:column;gap:10px}
+.msg{max-width:88%;padding:10px 12px;border-radius:14px;font-size:14px}
+.msg.me{align-self:flex-end;background:var(--azul);color:#fff;border-bottom-right-radius:4px}
+.msg.bot{align-self:flex-start;background:#fff;box-shadow:var(--sh);border-bottom-left-radius:4px}
+.msg.bot ul{margin:6px 0 0 18px}
+.suggest{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}
+.chatbar{position:sticky;bottom:76px;display:flex;gap:8px;background:var(--bg);padding:8px 0}
+.region-map{display:flex;gap:14px}
+.region-map svg{flex-shrink:0}
+.rlist{flex:1;display:flex;flex-direction:column;gap:4px}
+.rrow{display:flex;justify-content:space-between;align-items:center;padding:7px 10px;border-radius:10px;background:#fff;font-size:13px;border:1px solid var(--line);text-align:left}
+.rrow.on{border-color:var(--azul);background:#EAF0FF}
+.check{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line)}
+.check input{width:20px;height:20px;margin-top:2px;accent-color:var(--azul)}
+details{background:#fff;border-radius:14px;box-shadow:var(--sh);margin-bottom:10px}
+details summary{padding:14px;font-weight:700;cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:8px}
+details summary::-webkit-details-marker{display:none}
+details summary:after{content:"＋";color:var(--azul)}
+details[open] summary:after{content:"－"}
+details .in{padding:0 14px 14px;font-size:14px}
+details .in p{margin-bottom:8px}
+.toast{position:fixed;bottom:92px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:12px;font-size:13.5px;z-index:60;animation:up .2s;max-width:90%}
+.cmpbar{position:fixed;bottom:66px;left:0;right:0;z-index:25;display:flex;justify-content:center;pointer-events:none}
+.cmpbar .in{pointer-events:auto;background:var(--ink);color:#fff;border-radius:14px;margin:0 12px 8px;padding:8px 8px 8px 14px;display:flex;align-items:center;gap:10px;max-width:736px;width:100%;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.cmpbar .in span{flex:1;font-size:13.5px;font-weight:600}
+.empty{text-align:center;padding:40px 20px;color:var(--muted)}
+.empty .e{font-size:44px;margin-bottom:6px}
+.legend{display:flex;gap:10px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin:8px 0}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px;vertical-align:middle}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.foot{font-size:12px;color:var(--muted);text-align:center;padding:20px 10px}
+@media(min-width:640px){.grid4{grid-template-columns:repeat(4,1fr)}h1{font-size:30px}}
+/* ===== v2: diseño simplificado, color y animación ===== */
+.fx{animation:rise .45s cubic-bezier(.2,.8,.2,1) both;animation-delay:var(--d,0ms)}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}}
+@keyframes pop{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
+.hero2{background:linear-gradient(120deg,#2D5BFF,#7B3FF2,#14C8B8,#2D5BFF);background-size:300% 300%;animation:shift 12s ease infinite;color:#fff;border-radius:26px;padding:28px 20px 22px;position:relative;overflow:hidden}
+@keyframes shift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.floaty{position:absolute;font-size:28px;opacity:.4;animation:float 6s ease-in-out infinite;pointer-events:none}
+@keyframes float{50%{transform:translateY(-12px) rotate(10deg)}}
+.hero2 h1,.hero2 p,.hero2 .search,.hero2 .kick{position:relative;z-index:1}
+.kick{display:inline-block;background:rgba(255,255,255,.2);border-radius:99px;padding:4px 12px;font-size:12px;font-weight:700}
+.big4{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+.bt{border-radius:22px;padding:18px 14px;color:#fff;text-align:left;min-height:138px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;box-shadow:0 10px 22px rgba(45,91,255,.18);transition:transform .15s}
+.bt:hover{transform:translateY(-3px)} .bt:active{transform:scale(.96)}
+.bt .em{font-size:36px;display:inline-block;animation:pop .5s both;animation-delay:var(--d)}
+.bt b{font-size:16.5px;line-height:1.2;display:block} .bt span{font-size:12.5px;opacity:.92}
+.bt:after{content:"";position:absolute;right:-24px;bottom:-24px;width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,.16)}
+.sech{display:flex;align-items:baseline;justify-content:space-between;margin:26px 0 10px}
+.sech h2{margin:0}
+.sech a{font-size:13px;font-weight:700;text-decoration:none}
+.hscroll{display:flex;gap:12px;overflow-x:auto;padding:4px 2px 14px;scroll-snap-type:x mandatory;scrollbar-width:none}
+.hscroll::-webkit-scrollbar{display:none}
+.spot{min-width:236px;max-width:236px;scroll-snap-align:start;border-radius:22px;padding:16px;color:#fff;cursor:pointer;position:relative;overflow:hidden;text-align:left;transition:transform .15s}
+.spot:hover{transform:translateY(-3px)}
+.spot .lab{display:inline-block;background:rgba(255,255,255,.25);border-radius:99px;padding:4px 10px;font-size:11.5px;font-weight:800}
+.spot h3{font-size:17px;margin-top:12px;line-height:1.2;padding-right:30px}
+.spot .ins{font-size:12px;opacity:.9;margin-top:2px}
+.spot .big{font-size:28px;font-weight:800;margin-top:10px;letter-spacing:-.02em}
+.spot .big small{font-size:12px;font-weight:600;opacity:.9;margin-left:4px}
+.spot .em{position:absolute;right:12px;top:12px;font-size:38px;animation:float 5s ease-in-out infinite}
+.areas{display:grid;grid-template-columns:repeat(5,1fr);gap:14px 6px}
+.ab{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px;font-weight:700;text-align:center;line-height:1.15}
+.ab i{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;font-size:25px;font-style:normal;box-shadow:0 6px 14px rgba(20,27,52,.14);transition:transform .2s}
+.ab:hover i{transform:scale(1.1) rotate(-8deg)}
+.ab.on i{outline:3px solid var(--ink);outline-offset:3px}
+.arow{display:flex;gap:10px;overflow-x:auto;padding:8px 2px 10px;scrollbar-width:none}
+.arow::-webkit-scrollbar{display:none}
+.arow .ab{min-width:66px}
+.arow .ab i{width:46px;height:46px;font-size:21px}
+.ccard2{background:#fff;border-radius:22px;box-shadow:var(--sh);margin-bottom:14px;overflow:hidden;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.ccard2:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(20,27,52,.12)}
+.band{display:flex;align-items:center;gap:8px;padding:10px 10px 10px 14px;color:#fff}
+.band .em{font-size:22px}
+.band .aname{font-size:12px;font-weight:800;flex:1;letter-spacing:.02em}
+.ib{width:36px;height:36px;border-radius:11px;background:rgba(255,255,255,.22);color:#fff;font-size:16px;display:inline-grid;place-items:center;margin-left:4px;transition:transform .15s}
+.ib.on{background:#fff}
+.ib:active{transform:scale(.8)}
+.cb{padding:12px 14px 14px}
+.cb h3{font-size:17.5px;line-height:1.2}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.stats div{text-align:center;background:#F6F8FD;border-radius:14px;padding:9px 4px}
+.stats b{display:block;font-size:15.5px;letter-spacing:-.01em}
+.stats small{font-size:11px;color:var(--muted);font-weight:600}
+.tags{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.tag{font-size:12px;font-weight:700;padding:5px 11px;border-radius:99px}
+.tag.g{background:#E3F7EE;color:#0B7A4F}.tag.w{background:#FFF4DB;color:#8A5A00}.tag.r{background:#FDE8E8;color:#B42323}.tag.t{background:#DDF7F4;color:#0A7F74}.tag.b{background:#EAF0FF;color:#2449CC}
+.qrow{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:2px 0 6px}
+.qrow::-webkit-scrollbar{display:none}
+.count{font-size:13px;color:var(--muted);margin:8px 0 12px;font-weight:600}
+.count b{color:var(--ink);font-size:16px}
+.hd2{padding:22px 16px 18px;color:#fff;border-radius:24px 24px 0 0;position:relative}
+.hd2 .em{position:absolute;right:56px;top:16px;font-size:48px;opacity:.9;animation:float 5s ease-in-out infinite}
+.rings{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:14px 12px 0}
+.ring{background:#fff;border-radius:18px;box-shadow:var(--sh);padding:10px 4px 10px;text-align:center;position:relative}
+.ring svg{width:78px;height:78px;display:block;margin:0 auto}
+.ring .rv{position:absolute;top:36px;left:0;right:0;font-weight:800;font-size:14.5px;letter-spacing:-.02em}
+.ring small{display:block;font-size:11px;color:var(--muted);font-weight:700;margin-top:2px}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:14px 12px 4px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{white-space:nowrap;padding:9px 14px;border-radius:99px;font-weight:700;font-size:13.5px;background:#fff;border:1px solid var(--line);transition:.15s}
+.tab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.tabc{animation:rise .3s both}
+.bigstat{border-radius:18px;padding:14px 16px;font-weight:700;display:flex;gap:12px;align-items:center;font-size:14.5px;line-height:1.35}
+.bigstat .e{font-size:30px}
+.bigstat.ok{background:linear-gradient(135deg,#12A36B,#3CC98A);color:#fff}
+.bigstat.mid{background:linear-gradient(135deg,#F2A516,#FFC94D);color:#3B2600}
+.bigstat.bad{background:linear-gradient(135deg,#E04848,#FF7A6B);color:#fff}
+.bigstat.info{background:linear-gradient(135deg,#2D5BFF,#7B3FF2);color:#fff}
+.scale{position:relative;height:14px;border-radius:99px;background:linear-gradient(90deg,#FFB4B4,#FFE08A,#9BE3BF);margin:34px 6px 34px}
+.mk{position:absolute;top:-6px;width:4px;height:26px;border-radius:2px;transform:translateX(-50%);background:var(--ink)}
+.mk span{position:absolute;top:-22px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:11px;font-weight:800}
+.mk.lo span{top:30px}
+.youdot{position:absolute;top:-6px;width:26px;height:26px;border-radius:50%;background:var(--azul);border:3px solid #fff;transform:translateX(-50%);animation:pulse 1.6s infinite;transition:left 1.1s cubic-bezier(.2,.8,.2,1);left:0}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(45,91,255,.55)}70%{box-shadow:0 0 0 14px rgba(45,91,255,0)}100%{box-shadow:0 0 0 0 rgba(45,91,255,0)}}
+.seg{display:flex;height:22px;border-radius:99px;overflow:hidden;background:#EEF1F8}
+.seg i{height:100%;width:0;transition:width 1s cubic-bezier(.2,.8,.2,1)}
+.leg{display:flex;flex-wrap:wrap;gap:6px 12px;margin-top:8px;font-size:12px;font-weight:600}
+.leg span:before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--c);margin-right:5px;vertical-align:-1px}
+.hrow{display:grid;grid-template-columns:96px 1fr auto;gap:8px;align-items:center;margin:9px 0;font-size:12.5px}
+.hrow .nm{font-weight:700;line-height:1.15;overflow:hidden}
+.hb{height:16px;border-radius:99px;background:#EEF1F8;overflow:hidden}
+.hb>i{display:block;height:100%;width:0;border-radius:99px;transition:width 1.1s cubic-bezier(.2,.8,.2,1)}
+.hrow .vl{font-weight:800;white-space:nowrap}
+.hrow.best .vl:after{content:" 🏆"}
+.mcard{background:#fff;border-radius:20px;box-shadow:var(--sh);padding:16px;margin-bottom:12px}
+.mcard h3{display:flex;justify-content:space-between;align-items:center}
+.mcard h3 small{font-size:11.5px;color:var(--muted);font-weight:600}
+.cmpsel{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 14px}
+.cmpsel span{display:inline-flex;align-items:center;gap:6px;background:#fff;border-radius:99px;padding:6px 6px 6px 12px;font-size:12.5px;font-weight:700;box-shadow:var(--sh)}
+.cmpsel span i{width:10px;height:10px;border-radius:50%;font-style:normal}
+.cmpsel button{width:22px;height:22px;border-radius:50%;background:#F0F2F8;font-size:11px}
+.dots{display:flex;gap:5px}
+.dots i{width:22px;height:22px;border-radius:7px;background:#EEF1F8;transition:background .4s}
+.dots i.on{background:#E4E8F2}.dots.go i.on{background:linear-gradient(135deg,#2D5BFF,#7B3FF2)}
+.tool{display:flex;align-items:center;gap:12px;padding:12px;border-radius:16px;background:#fff;box-shadow:var(--sh);margin-bottom:10px;width:100%;text-align:left}
+.tool .ic{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;font-size:22px;color:#fff;flex-shrink:0}
+.tool b{display:block;font-size:14.5px}
+.tool span{font-size:12.5px;color:var(--muted)}
+.fsheet{padding:16px}
+.fsheet h2{margin-top:0}
+.sticky-cta{position:sticky;bottom:0;background:var(--bg);padding:12px 0 4px}
+body.native-ads #app{padding-bottom:150px}
+body.native-ads .cmpbar{bottom:126px}
+body.native-ads .toast{bottom:152px}
+body.native .top{padding-top:calc(10px + env(safe-area-inset-top))}
+@media(min-width:640px){.big4{grid-template-columns:repeat(4,1fr)}.areas{grid-template-columns:repeat(10,1fr)}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="sheet-root"></div>
+<script>
+/* =========================================================================
+   ELIGE TU FUTURO — MVP
+   Todos los datos de carreras e instituciones son DE DEMOSTRACIÓN (ficticios).
+   La estructura de cada registro ya incluye fuente, fecha, año académico y
+   estado de verificación, para reemplazarlos por datos oficiales (SIES, DEMRE,
+   CNA, MiFuturo) mediante el panel de administración en la siguiente fase.
+   ========================================================================= */
+
+/* ---------- Configuración de publicidad (sin integración real todavía) ---------- */
+const ADS = {
+  enabled: true,
+  provider: window.IS_NATIVE ? 'admob' : 'pendiente',            // 'adsense' (web) | 'admob' (móvil) cuando existan las cuentas
+  adsenseClient: null,              // ej. 'ca-pub-XXXXXXXXXXXX' — no configurado
+  admobAppId: null,                 // ej. 'ca-app-pub-XXXX~YYYY' — no configurado
+  personalized: false,              // por defecto NO personalizada (usuarios menores de edad)
+  slots: {
+    'inicio-banner':   {formato:'banner 320×100', ubicacion:'Pantalla de inicio'},
+    'resultados-1':    {formato:'nativo en lista', ubicacion:'Resultados de búsqueda (cada 6 tarjetas)'},
+    'orientacion':     {formato:'banner 320×50',  ubicacion:'Secciones de orientación'},
+    'contenidos':      {formato:'banner 300×250', ubicacion:'Artículos y contenidos informativos'}
+  },
+  // Categorías permitidas (sección 16). Instituciones solo si tienen reconocimiento oficial.
+  categorias: ['Instituciones de educación superior reconocidas','Preparación PAES','Idiomas','Servicios estudiantiles'],
+  demo: [
+    {e:'📘',t:'Preuniversitario (anunciante de ejemplo)',d:'Ensayos PAES y clases online.'},
+    {e:'🗣️',t:'Plataforma de idiomas (anunciante de ejemplo)',d:'Inglés para la U, desde cero.'},
+    {e:'🎒',t:'Servicio estudiantil (anunciante de ejemplo)',d:'Arriendo de piezas cerca de tu sede.'},
+    {e:'🏫',t:'Institución reconocida (anunciante de ejemplo)',d:'Conoce nuestras jornadas de puertas abiertas.'}
+  ]
+};
+let adCounter = 0;
+function adSlot(id){
+  if(!ADS.enabled || window.IS_NATIVE) return ''; // en la app Android la publicidad es un banner AdMob nativo
+  const s = ADS.slots[id]; const a = ADS.demo[(adCounter++) % ADS.demo.length];
+  return `<aside class="ad" aria-label="Publicidad"><span class="lbl">PUBLICIDAD</span>
+    <div class="body"><div class="thumb">${a.e}</div><div><b class="small">${a.t}</b><div class="xs muted">${a.d}</div></div></div>
+    <div class="slot">Espacio "${id}" · ${s.formato} · ${ADS.adsenseClient?'AdSense':'proveedor no conectado'} · no altera los resultados</div></aside>`;
+}
+
+/* ---------- Catálogos ---------- */
+const AREAS = {
+  salud:{n:'Salud',e:'🩺',c:'#FDE8EF',g:'linear-gradient(135deg,#FF5C8A,#FF9A6B)',k1:'#FF5C8A'},
+  tec:{n:'Ingeniería y Tecnología',e:'💻',c:'#EAF0FF',g:'linear-gradient(135deg,#2D5BFF,#5B9BFF)',k1:'#2D5BFF'},
+  cien:{n:'Ciencias',e:'🔬',c:'#DDF7F4',g:'linear-gradient(135deg,#0FB5A6,#3BA8FF)',k1:'#0FB5A6'},
+  edu:{n:'Educación',e:'📚',c:'#FFF4DB',g:'linear-gradient(135deg,#FFA41B,#FF6F45)',k1:'#FFA41B'},
+  soc:{n:'Cs. Sociales y Humanidades',e:'🧠',c:'#F1EAFF',g:'linear-gradient(135deg,#7B3FF2,#B66BFF)',k1:'#7B3FF2'},
+  arte:{n:'Arte, Diseño y Arquitectura',e:'🎨',c:'#FFEFE3',g:'linear-gradient(135deg,#FF5E3A,#FFB23D)',k1:'#FF5E3A'},
+  neg:{n:'Administración y Negocios',e:'📈',c:'#E3F7EE',g:'linear-gradient(135deg,#0FA36B,#4CD18F)',k1:'#0FA36B'},
+  der:{n:'Derecho',e:'⚖️',c:'#EEF0F5',g:'linear-gradient(135deg,#3B4363,#7A84A8)',k1:'#3B4363'},
+  agro:{n:'Agro y Medio Ambiente',e:'🌱',c:'#E6F6DD',g:'linear-gradient(135deg,#2FA84A,#A3D94A)',k1:'#2FA84A'},
+  ffaa:{n:'FF.AA. y Seguridad',e:'🎖️',c:'#EEF0F5',g:'linear-gradient(135deg,#4B5563,#9CA3AF)',k1:'#4B5563'},
+  serv:{n:'Turismo y Gastronomía',e:'🍳',c:'#FFF0E0',g:'linear-gradient(135deg,#E8590C,#FFB04D)',k1:'#E8590C'}
+};
+const REGIONES = ['Arica y Parinacota','Tarapacá','Antofagasta','Atacama','Coquimbo','Valparaíso','Metropolitana','O’Higgins','Maule','Ñuble','Biobío','La Araucanía','Los Ríos','Los Lagos','Aysén','Magallanes'];
+const TIPO_INST = {U:'Universidad',IP:'Instituto Profesional',CFT:'Centro de Formación Técnica',FFAA:'Escuela matriz FF.AA. y de Orden'};
+const RANGOS = [ // configurables (sección 4)
+  {id:'grat',n:'Con gratuidad',f:c=>inst(c).gratuidad},
+  {id:'r1',n:'Hasta $1.000.000',f:c=>c.arancel!=null&&c.arancel<=1000000},
+  {id:'r2',n:'$1 – 2 millones',f:c=>c.arancel>1000000&&c.arancel<=2000000},
+  {id:'r3',n:'$2 – 4 millones',f:c=>c.arancel>2000000&&c.arancel<=4000000},
+  {id:'r4',n:'Más de $4 millones',f:c=>c.arancel>4000000}
+];
+
+/* ---------- Instituciones DEMO (ficticias) ---------- */
+const INST = {
+  cor:{n:'Universidad Demo Cordillera',t:'U',reg:'Metropolitana',com:'Santiago',acred:6,acredAreas:'Gestión, docencia, investigación, vinculación',gratuidad:true,autonoma:true,residencias:false,vida:['Biblioteca central','Laboratorios de simulación clínica','Gimnasio','Apoyo psicológico','Intercambio internacional']},
+  lit:{n:'Universidad Demo Litoral',t:'U',reg:'Valparaíso',com:'Viña del Mar',acred:5,acredAreas:'Gestión, docencia, vinculación',gratuidad:true,autonoma:true,residencias:true,vida:['Residencias estudiantiles','Casino subsidiado','Talleres artísticos','Programa de tutorías']},
+  sur:{n:'Universidad Demo Sur',t:'U',reg:'Los Lagos',com:'Puerto Montt',acred:4,acredAreas:'Gestión, docencia',gratuidad:true,autonoma:true,residencias:true,vida:['Residencias','Bus de acercamiento','Campo experimental agrícola','Apoyo académico']},
+  nor:{n:'Universidad Demo Norte',t:'U',reg:'Antofagasta',com:'Antofagasta',acred:5,acredAreas:'Gestión, docencia, investigación',gratuidad:true,autonoma:true,residencias:false,vida:['Estación de biología marina','Laboratorios','Deportes náuticos','Apoyo psicológico']},
+  hor:{n:'IP Demo Horizonte',t:'IP',reg:'Metropolitana',com:'Santiago',acred:5,acredAreas:'Gestión, docencia',gratuidad:true,autonoma:true,residencias:false,vida:['Jornada vespertina','Laboratorios de computación','Bolsa de empleo']},
+  nex:{n:'IP Demo Nexo',t:'IP',reg:'Metropolitana',com:'Maipú',acred:3,acredAreas:'Gestión, docencia',gratuidad:false,autonoma:true,residencias:false,vida:['Cocina profesional','Taller de diseño','Bolsa de empleo']},
+  ara:{n:'CFT Demo Araucaria',t:'CFT',reg:'La Araucanía',com:'Temuco',acred:4,acredAreas:'Gestión, docencia',gratuidad:true,autonoma:true,residencias:false,vida:['Talleres técnicos','Convenios de práctica','Apoyo académico']},
+  val:{n:'CFT Demo Valle',t:'CFT',reg:'Biobío',com:'Concepción',acred:3,acredAreas:'Gestión, docencia',gratuidad:false,autonoma:false,residencias:false,vida:['Modalidad online','Taller mecánico','Convenios con empresas']}
+};
+
+/* ---------- Carreras DEMO ----------
+   pond: {nem,rank,cl,m1,m2,opt} porcentajes. null = admisión sin PAES (directa).
+   min = puntaje mínimo de postulación; corte = puntaje del último seleccionado (año anterior).
+   null en cualquier campo => "Información no disponible". */
+const META = {fuente:'Datos de demostración — no oficiales',fecha:'2026-11-16',anio:2026,verif:'No verificado (demo)',url:null};
+const C = [
+ {id:1,n:'Enfermería',i:'cor',a:'salud',tipo:'Profesional',grado:'Licenciatura en Enfermería',titulo:'Enfermero/a',mod:'Presencial',jor:'Diurna',sem:10,real:11.4,arancel:4250000,mat:290000,pond:{nem:20,rank:20,cl:15,m1:25,opt:20},min:500,corte:688,cupos:90,emp1:89,emp2:93,ing:[1.5,1.8],acredCarrera:'6 años (demo)',malla:[['Anatomía','Química general','Introducción a la enfermería'],['Fisiología','Bioquímica','Salud pública'],['Fisiopatología','Farmacología','Enfermería básica'],['Enfermería del adulto I','Microbiología'],['Enfermería del adulto II','Gestión del cuidado'],['Enfermería infantil','Bioética'],['Enfermería en salud mental','Investigación'],['Enfermería comunitaria','Gestión en salud'],['Internado hospitalario'],['Internado comunitario','Seminario de título']],practicas:'Campos clínicos desde 3er año; internado en 9° y 10° semestre.',perfil:'Profesional que gestiona el cuidado de personas en hospitales, atención primaria y comunidad.',sect:['Hospitales públicos','Clínicas privadas','Atención primaria (CESFAM)'],cont:'Magíster en Enfermería, especialidades clínicas.'},
+ {id:2,n:'Enfermería',i:'lit',a:'salud',tipo:'Profesional',grado:'Licenciatura en Enfermería',titulo:'Enfermero/a',mod:'Presencial',jor:'Diurna',sem:10,real:11.8,arancel:3650000,mat:250000,pond:{nem:25,rank:20,cl:15,m1:20,opt:20},min:480,corte:642,cupos:70,emp1:86,emp2:91,ing:[1.4,1.7],acredCarrera:'5 años (demo)',malla:null,practicas:'Campos clínicos en red regional.',perfil:'Formación con énfasis en salud familiar y comunitaria.',sect:['Hospitales públicos','Atención primaria'],cont:null},
+ {id:3,n:'Técnico de Nivel Superior en Enfermería',i:'ara',a:'salud',tipo:'Técnica',grado:null,titulo:'Técnico de Nivel Superior en Enfermería',mod:'Presencial',jor:'Diurna y vespertina',sem:5,real:5.6,arancel:1380000,mat:120000,pond:null,min:null,corte:null,cupos:120,emp1:76,emp2:82,ing:[0.65,0.8],acredCarrera:null,malla:[['Anatomía básica','Primeros auxilios'],['Procedimientos de enfermería','Farmacología básica'],['Cuidados del adulto','Salud comunitaria'],['Cuidados pediátricos','Gestión de insumos'],['Práctica profesional']],practicas:'Práctica de 360 horas en 5° semestre.',perfil:'Técnico que apoya el cuidado de pacientes bajo supervisión profesional.',sect:['Hospitales','Clínicas','Cuidado domiciliario'],cont:'Articulación con Enfermería (ver Beca de Articulación).'},
+ {id:4,n:'Ingeniería Civil Informática',i:'cor',a:'tec',tipo:'Profesional',grado:'Licenciatura en Ciencias de la Ingeniería',titulo:'Ingeniero/a Civil Informático/a',mod:'Presencial',jor:'Diurna',sem:12,real:14.1,arancel:4600000,mat:290000,pond:{nem:20,rank:20,cl:10,m1:35,m2:5,opt:10},min:500,corte:722,cupos:110,emp1:91,emp2:94,ing:[2.0,2.6],acredCarrera:'No obligatoria',malla:[['Cálculo I','Álgebra','Introducción a la programación'],['Cálculo II','Física I','Programación avanzada'],['Cálculo III','Estructuras de datos','Física II'],['Ecuaciones diferenciales','Bases de datos','Probabilidades'],['Sistemas operativos','Ingeniería de software'],['Redes','Inteligencia artificial'],['Arquitectura de software','Optativo'],['Seguridad informática','Gestión de proyectos'],['Práctica profesional'],['Computación en la nube','Optativo'],['Taller de título I'],['Taller de título II']],practicas:'Dos prácticas: operaria y profesional.',perfil:'Diseña y dirige soluciones de software y sistemas de información.',sect:['Tecnología','Banca','Consultoras','Sector público'],cont:'Magíster en Ciencias de la Computación.'},
+ {id:5,n:'Ingeniería en Informática',i:'hor',a:'tec',tipo:'Profesional',grado:null,titulo:'Ingeniero/a en Informática',mod:'Presencial',jor:'Diurna y vespertina',sem:8,real:9.2,arancel:2350000,mat:150000,pond:null,min:null,corte:null,cupos:200,emp1:82,emp2:88,ing:[1.2,1.6],acredCarrera:'No obligatoria',malla:null,practicas:'Práctica profesional en 8° semestre.',perfil:'Desarrolla y administra sistemas informáticos en empresas.',sect:['Tecnología','Retail','Servicios'],cont:'Continuidad hacia magíster profesionales.'},
+ {id:6,n:'Analista Programador',i:'val',a:'tec',tipo:'Técnica',grado:null,titulo:'Técnico de Nivel Superior Analista Programador',mod:'Online',jor:'Flexible',sem:5,real:5.9,arancel:1490000,mat:90000,pond:null,min:null,corte:null,cupos:null,emp1:71,emp2:79,ing:[0.8,1.0],acredCarrera:null,malla:null,practicas:'Práctica de 320 horas.',perfil:'Programa y mantiene aplicaciones web y de escritorio.',sect:['Tecnología','Pymes','Trabajo independiente'],cont:'Articulación con Ingeniería en Informática.'},
+ {id:7,n:'Arquitectura',i:'lit',a:'arte',tipo:'Profesional',grado:'Licenciatura en Arquitectura',titulo:'Arquitecto/a',mod:'Presencial',jor:'Diurna',sem:11,real:13.5,arancel:4300000,mat:250000,pond:{nem:20,rank:20,cl:15,m1:30,opt:15},min:500,corte:661,cupos:80,emp1:72,emp2:84,ing:[1.3,1.7],acredCarrera:'No obligatoria',malla:[['Taller de arquitectura I','Dibujo','Historia del arte'],['Taller II','Geometría descriptiva','Matemática'],['Taller III','Construcción I','Historia de la arquitectura'],['Taller IV','Estructuras I'],['Taller V','Urbanismo'],['Taller VI','Instalaciones'],['Taller VII','Gestión inmobiliaria'],['Taller VIII','Optativo'],['Práctica profesional'],['Seminario de investigación'],['Proyecto de título']],practicas:'Práctica de obra y práctica de oficina.',perfil:'Proyecta edificios y espacios urbanos considerando su contexto.',sect:['Oficinas de arquitectura','Constructoras','Sector público','Independiente'],cont:'Magíster en Urbanismo o Arquitectura.'},
+ {id:8,n:'Arquitectura',i:'sur',a:'arte',tipo:'Profesional',grado:'Licenciatura en Arquitectura',titulo:'Arquitecto/a',mod:'Presencial',jor:'Diurna',sem:10,real:12.6,arancel:3900000,mat:230000,pond:{nem:25,rank:20,cl:15,m1:25,opt:15},min:480,corte:598,cupos:50,emp1:68,emp2:80,ing:[1.1,1.5],acredCarrera:'No obligatoria',malla:null,practicas:'Práctica de obra.',perfil:'Énfasis en construcción en madera y territorio austral.',sect:['Constructoras','Municipios','Independiente'],cont:null},
+ {id:9,n:'Psicología',i:'cor',a:'soc',tipo:'Profesional',grado:'Licenciatura en Psicología',titulo:'Psicólogo/a',mod:'Presencial',jor:'Diurna',sem:10,real:11.6,arancel:4400000,mat:290000,pond:{nem:20,rank:25,cl:25,m1:15,opt:15},min:500,corte:679,cupos:100,emp1:74,emp2:83,ing:[1.1,1.4],acredCarrera:'No obligatoria',malla:null,practicas:'Práctica profesional en 10° semestre.',perfil:'Comprende y acompaña procesos psicológicos de personas, grupos y organizaciones.',sect:['Salud','Educación','Organizaciones','Consulta particular'],cont:'Magíster clínico, organizacional o educacional.'},
+ {id:10,n:'Psicología',i:'sur',a:'soc',tipo:'Profesional',grado:'Licenciatura en Psicología',titulo:'Psicólogo/a',mod:'Semipresencial',jor:'Vespertina',sem:10,real:11.9,arancel:3450000,mat:230000,pond:{nem:25,rank:25,cl:20,m1:15,opt:15},min:480,corte:589,cupos:60,emp1:69,emp2:78,ing:[0.95,1.25],acredCarrera:'No obligatoria',malla:null,practicas:'Práctica profesional.',perfil:'Enfoque comunitario y regional.',sect:['Salud','Municipios','Educación'],cont:null},
+ {id:11,n:'Pedagogía en Matemática',i:'lit',a:'edu',tipo:'Profesional',grado:'Licenciatura en Educación',titulo:'Profesor/a de Matemática',mod:'Presencial',jor:'Diurna',sem:10,real:10.9,arancel:3300000,mat:250000,pond:{nem:25,rank:25,cl:10,m1:30,opt:10},min:500,corte:618,cupos:45,emp1:87,emp2:92,ing:[1.0,1.2],acredCarrera:'5 años (demo) — obligatoria',malla:null,practicas:'Prácticas progresivas desde 1er año en colegios.',perfil:'Docente de matemática para enseñanza media.',sect:['Colegios municipales','Particulares subvencionados','Preuniversitarios'],cont:'Magíster en Didáctica de la Matemática.'},
+ {id:12,n:'Educación Parvularia',i:'sur',a:'edu',tipo:'Profesional',grado:'Licenciatura en Educación',titulo:'Educador/a de Párvulos',mod:'Presencial',jor:'Diurna',sem:8,real:8.7,arancel:3000000,mat:230000,pond:{nem:25,rank:30,cl:20,m1:15,opt:10},min:500,corte:561,cupos:40,emp1:84,emp2:90,ing:[0.85,1.0],acredCarrera:'4 años (demo) — obligatoria',malla:null,practicas:'Prácticas en jardines y salas cuna.',perfil:'Educa y acompaña el desarrollo en la primera infancia.',sect:['Jardines JUNJI/Integra','Colegios','Salas cuna'],cont:null},
+ {id:13,n:'Derecho',i:'cor',a:'der',tipo:'Profesional',grado:'Licenciatura en Ciencias Jurídicas',titulo:'Abogado/a (título otorgado por la Corte Suprema)',mod:'Presencial',jor:'Diurna',sem:10,real:12.8,arancel:4900000,mat:290000,pond:{nem:20,rank:20,cl:30,m1:10,opt:20},min:500,corte:703,cupos:150,emp1:78,emp2:86,ing:[1.5,2.2],acredCarrera:'No obligatoria',malla:null,practicas:'Práctica en Corporación de Asistencia Judicial tras egresar.',perfil:'Asesora, defiende y resuelve conflictos jurídicos.',sect:['Estudios jurídicos','Sector público','Empresas','Poder Judicial'],cont:'Magíster en Derecho.'},
+ {id:14,n:'Ingeniería Comercial',i:'nor',a:'neg',tipo:'Profesional',grado:'Licenciatura en Cs. Económicas y Administrativas',titulo:'Ingeniero/a Comercial',mod:'Presencial',jor:'Diurna',sem:10,real:11.2,arancel:4000000,mat:260000,pond:{nem:20,rank:20,cl:15,m1:35,opt:10},min:500,corte:631,cupos:120,emp1:80,emp2:88,ing:[1.4,1.9],acredCarrera:'No obligatoria',malla:null,practicas:'Práctica profesional.',perfil:'Gestiona empresas, finanzas y proyectos.',sect:['Minería','Banca','Retail','Emprendimiento'],cont:'MBA, Magíster en Finanzas.'},
+ {id:15,n:'Técnico en Administración',i:'val',a:'neg',tipo:'Técnica',grado:null,titulo:'Técnico de Nivel Superior en Administración',mod:'Online',jor:'Flexible',sem:4,real:4.8,arancel:1090000,mat:90000,pond:null,min:null,corte:null,cupos:null,emp1:68,emp2:75,ing:[0.6,0.75],acredCarrera:null,malla:null,practicas:'Práctica laboral.',perfil:'Apoya la gestión administrativa de organizaciones.',sect:['Pymes','Servicios','Sector público'],cont:'Articulación con Ingeniería en Administración.'},
+ {id:16,n:'Contador Auditor',i:'nex',a:'neg',tipo:'Profesional',grado:null,titulo:'Contador/a Auditor/a',mod:'Presencial',jor:'Vespertina',sem:8,real:9.4,arancel:2100000,mat:140000,pond:null,min:null,corte:null,cupos:150,emp1:79,emp2:85,ing:[1.0,1.3],acredCarrera:'No obligatoria',malla:null,practicas:'Práctica profesional.',perfil:'Lleva la contabilidad y audita estados financieros.',sect:['Empresas','Auditoras','Independiente'],cont:null},
+ {id:17,n:'Diseño Gráfico',i:'nex',a:'arte',tipo:'Profesional',grado:null,titulo:'Diseñador/a Gráfico/a',mod:'Presencial',jor:'Diurna',sem:8,real:8.9,arancel:2480000,mat:140000,pond:null,min:null,corte:null,cupos:80,emp1:63,emp2:74,ing:[0.75,1.0],acredCarrera:'No obligatoria',malla:null,practicas:'Práctica y portafolio de título.',perfil:'Crea identidad visual, piezas digitales e impresas.',sect:['Agencias','Medios','Independiente'],cont:null},
+ {id:18,n:'Medicina',i:'cor',a:'salud',tipo:'Profesional',grado:'Licenciatura en Medicina',titulo:'Médico/a Cirujano/a',mod:'Presencial',jor:'Diurna',sem:14,real:15.2,arancel:7250000,mat:290000,pond:{nem:20,rank:20,cl:15,m1:25,opt:20},min:600,corte:861,cupos:60,emp1:95,emp2:97,ing:[3.0,3.8],acredCarrera:'7 años (demo) — obligatoria',malla:null,practicas:'Internado de dos años.',perfil:'Diagnostica, trata y previene enfermedades.',sect:['Hospitales','Atención primaria','Clínicas'],cont:'Especialidades médicas.'},
+ {id:19,n:'Kinesiología',i:'nor',a:'salud',tipo:'Profesional',grado:'Licenciatura en Kinesiología',titulo:'Kinesiólogo/a',mod:'Presencial',jor:'Diurna',sem:10,real:11.3,arancel:4100000,mat:260000,pond:{nem:20,rank:20,cl:15,m1:25,opt:20},min:500,corte:652,cupos:70,emp1:77,emp2:85,ing:[1.1,1.4],acredCarrera:'No obligatoria',malla:null,practicas:'Internado clínico.',perfil:'Rehabilita y promueve el movimiento y la salud física.',sect:['Clínicas','Deporte','Hospitales'],cont:null},
+ {id:20,n:'Biología Marina',i:'nor',a:'cien',tipo:'Profesional',grado:'Licenciatura en Biología Marina',titulo:'Biólogo/a Marino/a',mod:'Presencial',jor:'Diurna',sem:10,real:12.0,arancel:3800000,mat:260000,pond:{nem:20,rank:20,cl:15,m1:20,opt:25},min:480,corte:601,cupos:40,emp1:61,emp2:72,ing:[0.95,1.3],acredCarrera:'No obligatoria',malla:null,practicas:'Salidas a terreno y práctica.',perfil:'Investiga y gestiona ecosistemas marinos.',sect:['Acuicultura','Consultoras ambientales','Investigación'],cont:'Magíster y doctorado en ciencias.'},
+ {id:21,n:'Agronomía',i:'sur',a:'agro',tipo:'Profesional',grado:'Licenciatura en Agronomía',titulo:'Ingeniero/a Agrónomo/a',mod:'Presencial',jor:'Diurna',sem:10,real:11.5,arancel:3600000,mat:230000,pond:{nem:25,rank:20,cl:15,m1:20,opt:20},min:480,corte:577,cupos:50,emp1:79,emp2:86,ing:[1.2,1.5],acredCarrera:'No obligatoria',malla:null,practicas:'Práctica predial.',perfil:'Gestiona la producción agrícola sostenible.',sect:['Agroindustria','Sector público','Exportadoras'],cont:null},
+ {id:22,n:'Técnico en Energías Renovables',i:'ara',a:'tec',tipo:'Técnica',grado:null,titulo:'Técnico de Nivel Superior en Energías Renovables',mod:'Presencial',jor:'Diurna',sem:5,real:5.5,arancel:1580000,mat:120000,pond:null,min:null,corte:null,cupos:60,emp1:73,emp2:81,ing:[0.8,1.05],acredCarrera:null,malla:null,practicas:'Práctica en empresas del sector.',perfil:'Instala y mantiene sistemas solares y eólicos.',sect:['Energía','Construcción','Independiente'],cont:'Articulación con Ingeniería en Electricidad.'},
+ {id:23,n:'Técnico en Mecánica Automotriz',i:'val',a:'tec',tipo:'Técnica',grado:null,titulo:'Técnico de Nivel Superior en Mecánica Automotriz',mod:'Presencial',jor:'Diurna y vespertina',sem:5,real:5.8,arancel:1520000,mat:90000,pond:null,min:null,corte:null,cupos:80,emp1:75,emp2:82,ing:[0.7,0.95],acredCarrera:null,malla:null,practicas:'Práctica en talleres y concesionarios.',perfil:'Diagnostica y repara vehículos.',sect:['Concesionarios','Minería','Taller propio'],cont:null},
+ {id:24,n:'Trabajo Social',i:'hor',a:'soc',tipo:'Profesional',grado:'Licenciatura en Trabajo Social',titulo:'Trabajador/a Social',mod:'Presencial',jor:'Diurna y vespertina',sem:8,real:9.0,arancel:2400000,mat:150000,pond:null,min:null,corte:null,cupos:120,emp1:76,emp2:84,ing:[0.85,1.05],acredCarrera:'No obligatoria',malla:null,practicas:'Prácticas en terreno desde 2° año.',perfil:'Interviene en problemáticas sociales con personas y comunidades.',sect:['Municipios','ONG','Salud','Programas sociales'],cont:null},
+ {id:25,n:'Periodismo',i:'lit',a:'soc',tipo:'Profesional',grado:'Licenciatura en Comunicación Social',titulo:'Periodista',mod:'Presencial',jor:'Diurna',sem:10,real:11.0,arancel:3900000,mat:250000,pond:{nem:20,rank:20,cl:30,m1:10,opt:20},min:480,corte:604,cupos:60,emp1:58,emp2:70,ing:[0.9,1.2],acredCarrera:'No obligatoria',malla:null,practicas:'Práctica en medios.',perfil:'Investiga, produce y comunica información.',sect:['Medios','Comunicaciones corporativas','Independiente'],cont:null},
+ {id:26,n:'Gastronomía',i:'nex',a:'serv',tipo:'Técnica',grado:null,titulo:'Técnico de Nivel Superior en Gastronomía',mod:'Presencial',jor:'Diurna',sem:5,real:5.4,arancel:2050000,mat:140000,pond:null,min:null,corte:null,cupos:90,emp1:70,emp2:78,ing:[0.6,0.8],acredCarrera:null,malla:null,practicas:'Práctica en restaurantes y hoteles.',perfil:'Prepara y gestiona producción gastronómica.',sect:['Restaurantes','Hotelería','Emprendimiento'],cont:null}
+];
+C.forEach(c=>c.meta=META);
+const inst = c => INST[c.i];
+
+/* ---------- Estado persistente (solo en este navegador) ---------- */
+const LS='etf_v1';
+let S={favs:[],comp:[],perfil:{nem:'',rank:'',cl:'',m1:'',m2:'',cien:'',hist:'',region:'',presupuesto:'',modalidad:'',areas:[]},test:null,checks:{},onboard:false};
+try{const s=JSON.parse(localStorage.getItem(LS)||'null'); if(s) S=Object.assign(S,s);}catch(e){}
+function save(){try{localStorage.setItem(LS,JSON.stringify(S));}catch(e){}}
+
+/* ---------- Utilidades ---------- */
+const $ = s=>document.querySelector(s);
+const clp = n=> n==null?NA():'$'+Math.round(n).toLocaleString('es-CL');
+const mm = n=> n==null||isNaN(n)?'—':'$'+(n/1e6).toLocaleString('es-CL',{maximumFractionDigits:1})+' M';
+const NA = ()=>'<span class="na">Información no disponible</span>';
+const v = x=> x==null||x===''?NA():x;
+const esc = s=>String(s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+const norm = s=>String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+const costoTotal = c=> c.arancel==null||!c.sem?null:c.arancel*(c.sem/2)+(c.mat||0)*Math.ceil(c.sem/2);
+const costoReal = c=> c.real&&c.arancel!=null? c.arancel*(c.real/2)+c.mat*Math.ceil(c.real/2):null;
+function toast(t){const d=document.createElement('div');d.className='toast';d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),2200);}
+
+/* ---------- Motor de admisión ("¿Me alcanza para entrar?") ---------- */
+function ponderado(c,p=S.perfil){
+  if(!c.pond) return null;
+  const opt = Math.max(+p.cien||0,+p.hist||0);
+  const vals={nem:+p.nem,rank:+p.rank,cl:+p.cl,m1:+p.m1,m2:+p.m2||0,opt};
+  const req=['nem','rank','cl','m1'];
+  if(req.some(k=>!vals[k])) return null;
+  let tot=0; for(const k in c.pond) tot+=c.pond[k]*(vals[k]||0);
+  return Math.round(tot/100*10)/10;
+}
+function admision(c){
+  if(c.admND) return {k:'nd',t:'Requisitos de ingreso: información no disponible en la base cargada. Revisa demre.cl o la institución.',cls:'info',cat:'nd'};
+  if(!c.pond) return {k:'info',t:'Admisión directa en la institución: no exige PAES. Requiere licencia de enseñanza media.',cls:'info',cat:'directa'};
+  const p=ponderado(c);
+  if(p==null) return {k:'none',t:'Ingresa tus puntajes en "Mi perfil" para estimar tus posibilidades.',cls:'info',cat:'sin'};
+  if(c.min!=null && p<c.min) return {k:'bad',p,t:`Tu ponderado estimado (${p}) está bajo el puntaje mínimo de postulación (${c.min}). No podrías postular con estos puntajes.`,cls:'bad',cat:'mejorar'};
+  if(c.corte==null) return {k:'mid',p,t:`Cumples el mínimo (${c.min}). No hay puntaje de corte publicado para comparar.`,cls:'mid',cat:'competitiva'};
+  const d=p-c.corte;
+  if(d>=15) return {k:'ok',p,t:`Tu ponderado estimado (${p}) supera en ${Math.round(d)} pts el corte del último seleccionado del año anterior (${c.corte}).`,cls:'ok',cat:'cumple'};
+  if(d>=-30) return {k:'mid',p,t:`Tu ponderado estimado (${p}) está cerca del corte del último seleccionado (${c.corte}). Tienes posibilidades competitivas.`,cls:'mid',cat:'competitiva'};
+  return {k:'bad',p,t:`Puedes postular (superas el mínimo de ${c.min}), pero tu ponderado (${p}) está ${Math.round(-d)} pts bajo el corte del año anterior (${c.corte}).`,cls:'bad',cat:'mejorar'};
+}
+const DISC_ADM='Estimación basada en datos históricos de demostración. Los cortes cambian cada año: esto no garantiza ni descarta tu admisión.';
+
+/* ---------- Router ---------- */
+const VIEWS={inicio:vInicio,explorar:vExplorar,comparar:vComparar,favoritos:vFavoritos,perfil:vPerfil,test:vTest,financiamiento:vFin,normativa:vNormativa,mapa:vMapa,asistente:vAsistente,calendario:vCalendario,ranking:vRanking,alternativas:vAlternativas,publicidad:vPublicidad,datos:vDatos,privacidad:vPrivacidad};
+let F={q:'',areas:[],tipoInst:[],tipo:[],costo:[],reg:'',mod:[],jor:[],alcance:false,orden:'rel',open:false};
+function go(h){ if(location.hash!=='#'+h) location.hash=h; else render(); }
+window.addEventListener('hashchange',render);
+function cur(){const h=location.hash.slice(1); return VIEWS[h]?h:'inicio';}
+function render(){
+  adCounter=0;
+  const view=cur();
+  $('#app').innerHTML = topbar() + `<main class="wrap">${VIEWS[view]()}</main>` + nav(view) + cmpBar(view);
+  window.scrollTo(0,0);
+  afterRender(view);
+}
+function topbar(){return `<header class="top"><div class="logo" data-go="inicio"><i>🧭</i>Elige tu futuro</div><div class="sp"></div>${DATA_MODE==='demo'?'<span class="pill-demo" data-go="datos" style="cursor:pointer">DATOS DEMO</span>':'<span class="pill-demo" data-go="datos" style="cursor:pointer;background:#E3F7EE;color:#0B7A4F;border-color:#9BE3BF">BASE OFICIAL</span>'}<button class="iconbtn" data-go="asistente" title="Asistente">💬</button></header>`;}
+function nav(v){
+  const it=[['inicio','🏠','Inicio'],['explorar','🔎','Explorar'],['comparar','⚖️','Comparar'],['favoritos','❤️','Favoritos'],['perfil','👤','Mi perfil']];
+  return `<nav class="nav"><div class="in">${it.map(([k,e,n])=>`<button class="${v===k?'on':''}" data-go="${k}"><span class="e">${e}</span>${n}${k==='comparar'&&S.comp.length?`<span class="cnt">${S.comp.length}</span>`:''}${k==='favoritos'&&S.favs.length?`<span class="cnt">${S.favs.length}</span>`:''}</button>`).join('')}</div></nav>`;
+}
+function cmpBar(v){ if(!S.comp.length||v==='comparar') return ''; return `<div class="cmpbar"><div class="in"><span>⚖️ ${S.comp.length} de 4 para comparar</span><button class="btn sm pri" data-go="comparar">Comparar</button></div></div>`; }
+
+/* ---------- Tarjeta de carrera (v2: más simple y visual) ---------- */
+const anios = s => s==null?'—':(s/2).toLocaleString('es-CL',{maximumFractionDigits:1})+' años';
+const STAT = {cumple:['g','✓ Te alcanza'],competitiva:['w','≈ Competitiva'],mejorar:['r','Requiere mejorar'],directa:['t','Sin PAES']};
+function card(c,i=0){
+  const I=inst(c), A=AREAS[c.a], ad=admision(c), st=STAT[ad.cat];
+  const fav=S.favs.includes(c.id), cmp=S.comp.includes(c.id);
+  return `<article class="ccard2 fx" style="--d:${Math.min(i,8)*60}ms" data-open="${c.id}">
+   <div class="band" style="background:${A.g}"><span class="em">${A.e}</span><span class="aname">${A.n.toUpperCase()}</span>
+    <button class="ib ${fav?'on':''}" data-fav="${c.id}" title="Guardar" aria-label="Guardar">${fav?'❤️':'🤍'}</button><button class="ib ${cmp?'on':''}" data-cmp="${c.id}" title="Comparar" aria-label="Comparar">⚖️</button></div>
+   <div class="cb"><h3>${esc(c.n)}</h3><div class="small muted">${I.n} · ${I.com}</div>
+    <div class="stats"><div><b>${mm(c.arancel)}</b><small>al año</small></div><div><b>${anios(c.sem)}</b><small>duración</small></div>${c.emp1!=null?`<div><b>${c.emp1}%</b><small>con empleo</small></div>`:`<div><b>${c.cupos??'—'}</b><small>vacantes</small></div>`}</div>
+    <div class="tags">${I.gratuidad?'<span class="tag g">🎓 Gratuidad</span>':''}${st&&!c.admND?`<span class="tag ${st[0]}">${st[1]}</span>`:''}<span class="tag b">${TIPO_INST[I.t]}</span>${DATA_MODE==='oficial'?`<span class="tag t">${c.jor}</span>`:''}${c.esp?'<span class="tag w">Programa especial</span>':''}${c.noDirecto?'<span class="tag r">Requiere estudios previos</span>':''}</div>
+   </div></article>`;
+}
+function areaBubbles(cls,sel){return Object.entries(AREAS).map(([k,a],i)=>`<button class="ab fx ${sel.includes(k)?'on':''}" style="--d:${i*35}ms" data-area="${k}"><i style="background:${a.g}">${a.e}</i>${a.n.split(/[ ,]/)[0]}</button>`).join('');}
+
+
+/* ================= VISTAS ================= */
+function vInicio(){
+  const by=(f,ok=()=>true)=>[...C].filter(ok).sort(f)[0];
+  const spots=[
+    ['📈 Mayor empleabilidad',by((a,b)=>b.emp1-a.emp1,c=>c.emp1!=null),c=>`${c.emp1}%<small>con empleo al 1er año</small>`],
+    ['💰 Más económica',by((a,b)=>a.arancel-b.arancel,c=>c.arancel>100000),c=>`${mm(c.arancel)}<small>al año</small>`],
+    ['⚡ Más corta',by((a,b)=>a.sem-b.sem,c=>c.sem>0),c=>`${anios(c.sem)}<small>y a trabajar</small>`],
+    DATA_MODE==='demo'?['🔥 Más consultada',C.find(c=>c.id===4),c=>`${c.corte}<small>pts de corte</small>`]:['👥 Más vacantes',by((a,b)=>b.cupos-a.cupos,c=>c.cupos),c=>`${c.cupos}<small>vacantes</small>`],
+    DATA_MODE==='demo'?['🎓 Con gratuidad',C.find(c=>c.id===3),c=>`$0<small>si cumples requisitos</small>`]:['🎓 Con gratuidad',by((a,b)=>b.cupos-a.cupos,c=>inst(c).gratuidad&&c.cupos),c=>`$0<small>si cumples requisitos</small>`]
+  ].filter(s=>s&&s[1]);
+  return `
+  <section class="hero2"><span class="floaty" style="right:18px;top:14px">🎓</span><span class="floaty" style="right:70px;top:70px;animation-delay:1s">🔬</span><span class="floaty" style="right:20px;top:110px;animation-delay:2s">💻</span><span class="floaty" style="right:96px;top:6px;animation-delay:3s">🎨</span>
+   <span class="kick">✨ Gratis · sin registro${DATA_MODE==='oficial'?' · '+C.length.toLocaleString('es-CL')+' carreras':''}</span>
+   <h1 style="margin-top:12px;max-width:80%">¿Qué quieres hacer con tu futuro?</h1>
+   <p class="small" style="opacity:.92;margin-top:6px">No sabes qué estudiar. Nosotros te ayudamos a descubrirlo.</p>
+   <form class="search" id="home-search"><span>🔎</span><input id="hq" placeholder="Busca una carrera, universidad o área que te interese" aria-label="Buscar"><button class="btn pri sm">Buscar</button></form>
+  </section>
+  <div class="big4">
+   <button class="bt fx" style="--d:0ms;background:linear-gradient(135deg,#7B3FF2,#D35BFF)" data-go="test"><span class="em" style="--d:100ms">🧭</span><div><b>No sé qué estudiar</b><span>Test de 3 minutos</span></div></button>
+   <button class="bt fx" style="--d:70ms;background:linear-gradient(135deg,#2D5BFF,#5B9BFF)" data-go="explorar"><span class="em" style="--d:170ms">🔎</span><div><b>Buscar carreras</b><span>Todas las opciones</span></div></button>
+   <button class="bt fx" style="--d:140ms;background:linear-gradient(135deg,#0FB5A6,#3BD1C2)" data-go="comparar"><span class="em" style="--d:240ms">⚖️</span><div><b>Comparar opciones</b><span>Lado a lado</span></div></button>
+   <button class="bt fx" style="--d:210ms;background:linear-gradient(135deg,#0FA36B,#7ED957)" data-go="financiamiento"><span class="em" style="--d:310ms">💸</span><div><b>¿Cuánto puedo pagar?</b><span>Gratuidad y becas</span></div></button>
+  </div>
+  <div class="sech"><h2>⭐ Destacados</h2><a href="#explorar">Ver todo →</a></div>
+  <div class="hscroll">${spots.map(([l,c,f],i)=>`<button class="spot fx" style="--d:${i*70}ms;background:${AREAS[c.a].g}" data-open="${c.id}"><span class="lab">${l}</span><span class="em">${AREAS[c.a].e}</span><h3>${esc(c.n)}</h3><div class="ins">${inst(c).n}</div><div class="big">${f(c)}</div></button>`).join('')}</div>
+  <div class="sech"><h2>🧩 Explora por área</h2></div>
+  <div class="areas">${areaBubbles('',[])}</div>
+  ${adSlot('inicio-banner')}
+  <button class="tool fx" data-tools><div class="ic" style="background:var(--grad)">🧰</div><div style="flex:1"><b>Más herramientas</b><span>Ranking, mapa, planificador, asistente y más</span></div><span>›</span></button>
+  ${footer()}`;
+}
+const TOOLS=[['ranking','🏆','Mi ranking personal','Según tus intereses y presupuesto','#FFA41B,#FF6F45'],['perfil','🎯','¿Me alcanza para entrar?','Simula con tus puntajes','#FF5C8A,#FF9A6B'],['mapa','🗺️','Mapa de sedes','Busca por región','#2FA84A,#A3D94A'],['alternativas','🔀','Otros caminos','Si no quieres ir a la U o no quedas','#E8590C,#FFB04D'],['calendario','📅','Planificador','Tareas del proceso de admisión','#2D5BFF,#5B9BFF'],['normativa','🛡️','Antes de matricularte','Acreditación y normativa','#3B4363,#7A84A8'],['asistente','💬','Asistente','Pregunta lo que quieras','#7B3FF2,#B66BFF'],['datos','🗄️','Base de datos','Fuente, cobertura y carga oficial','#0FB5A6,#3BA8FF']];
+function toolsSheet(){
+  $('#sheet-root').innerHTML=`<div class="sheet-bg" data-close><div class="sheet fsheet"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><h2 style="margin:0">🧰 Herramientas</h2><button class="iconbtn" data-close>✕</button></div>
+  ${TOOLS.map(([k,e,t,d,g],i)=>`<button class="tool fx" style="--d:${i*50}ms" data-go="${k}"><div class="ic" style="background:linear-gradient(135deg,${g})">${e}</div><div style="flex:1"><b>${t}</b><span>${d}</span></div><span>›</span></button>`).join('')}</div></div>`;
+}
+function footer(){return `<div class="foot">Elige tu futuro es gratis para estudiantes y se financia con publicidad claramente identificada, que nunca altera los resultados del buscador. No vendemos datos personales.<br><a href="#publicidad">Cómo funciona la publicidad</a> · <a href="#privacidad">Política de privacidad</a> · <a href="#normativa">Normativa</a><br><br>${DATA_MODE==='demo'?'<b>Versión MVP.</b> Las carreras e instituciones que ves son <b>ficticias, de demostración</b>.':'Fuente: '+DATA_INFO.fuente+'.'} <a href="#datos">Base de datos</a></div>`;}
+
+/* ---- Explorar ---- */
+function filtrar(){
+  const q=norm(F.q).trim();
+  let r=C.filter(c=>{
+    const I=inst(c);
+    if(q){ const hay=norm([c.n,I.n,AREAS[c.a].n,I.com,I.reg,c.titulo,TIPO_INST[I.t],I.t].join(' ')); if(!q.split(/\s+/).every(w=>hay.includes(w))) return false; }
+    if(F.areas.length&&!F.areas.includes(c.a)) return false;
+    if(F.tipoInst.length&&!F.tipoInst.includes(I.t)) return false;
+    if(F.tipo.length&&!F.tipo.includes(c.tipo)) return false;
+    if(F.costo.length&&!F.costo.some(id=>RANGOS.find(x=>x.id===id).f(c))) return false;
+    if(F.alcance&&c.admND) return false;
+    if(F.reg&&I.reg!==F.reg&&!(F.reg==='online'&&c.mod==='Online')) return false;
+    if(F.mod.length&&c.mod!=null&&!F.mod.includes(c.mod)) return false;
+    if(F.jor.length&&!F.jor.some(j=>String(c.jor).includes(j))) return false;
+    if(F.alcance){const a=admision(c); if(!['cumple','competitiva','directa'].includes(a.cat)) return false;}
+    return true;
+  });
+  const o=F.orden;
+  if(o==='barato') r.sort((a,b)=>(a.arancel??9e12)-(b.arancel??9e12));
+  if(o==='corto') r.sort((a,b)=>a.sem-b.sem);
+  if(o==='empleo') r.sort((a,b)=>(b.emp1||0)-(a.emp1||0)); if(o==='corto') r.sort((a,b)=>(a.sem??99)-(b.sem??99));
+  if(o==='az') r.sort((a,b)=>a.n.localeCompare(b.n));
+  return r;
+}
+function nFiltros(){return F.areas.length+F.tipoInst.length+F.tipo.length+F.costo.length+(F.reg?1:0)+F.mod.length+F.jor.length+(F.alcance?1:0);}
+function opts(group,items,sel){return `<div class="opts">${items.map(([k,n])=>`<button class="opt ${sel.includes(k)?'on':''}" data-f="${group}" data-v="${k}">${n}</button>`).join('')}</div>`;}
+let LIM=30;
+function vExplorar(){
+  const r=filtrar(); const nf=F.tipoInst.length+F.tipo.length+F.costo.filter(x=>x!=='grat').length+(F.reg?1:0)+F.mod.length+F.jor.length+(F.orden!=='rel'?1:0);
+  let list=''; r.slice(0,LIM).forEach((c,i)=>{ list+=card(c,i%10); if((i+1)%6===0) list+=adSlot('resultados-1'); });
+  if(r.length>LIM) list+=`<button class="btn sec" style="width:100%;padding:14px" data-more>Ver más (${(r.length-LIM).toLocaleString('es-CL')} restantes)</button>`;
+  return `<h1>Explorar</h1>
+  <form class="search" id="ex-search" style="box-shadow:var(--sh)"><span>🔎</span><input id="exq" value="${esc(F.q)}" placeholder="Carrera, institución o comuna" aria-label="Buscar"><button class="btn pri sm">Buscar</button></form>
+  <div class="arow">${areaBubbles('',F.areas)}</div>
+  <div class="qrow">
+    <button class="fbtn ${nf?'on':''}" data-toggle-filters>⚙️ Filtros${nf?` · ${nf}`:''}</button>
+    <button class="fbtn ${F.costo.includes('grat')?'on':''}" data-f="costo" data-v="grat">🎓 Con gratuidad</button>
+    ${DATA_MODE==='demo'?`<button class="fbtn ${F.alcance?'on':''}" data-falc>🎯 Me alcanza</button>`:''}
+    ${(nf||F.areas.length||F.q||F.alcance||F.costo.length)?'<button class="fbtn" data-clear>✕ Limpiar</button>':''}
+  </div>
+  ${F.alcance && !S.perfil.m1?`<div class="status info">ℹ️ Para usar "Me alcanza" ingresa tus puntajes en <a href="#perfil">Mi perfil</a>.</div>`:''}
+  <div class="count"><b>${r.length.toLocaleString('es-CL')}</b> carrera${r.length===1?'':'s'}</div>
+  ${r.length?list:`<div class="empty"><div class="e">🔍</div>No encontramos carreras con esos filtros.<br><button class="btn sec sm" style="margin-top:10px" data-clear>Limpiar filtros</button></div>`}`;
+}
+let SHEET='';
+function filtersSheet(){
+  SHEET='filters'; const n=filtrar().length;
+  $('#sheet-root').innerHTML=`<div class="sheet-bg" data-close><div class="sheet fsheet"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><h2 style="margin:0">⚙️ Filtros</h2><button class="iconbtn" data-close>✕</button></div>
+   <div class="fgroup"><label>¿Dónde estudiar?</label>${opts('tipoInst',[['U','🏛️ Universidad'],['IP','🏢 Instituto Profesional'],['CFT','🔧 CFT'],['FFAA','🎖️ FF.AA. y de Orden']],F.tipoInst)}</div>
+   <div class="fgroup"><label>Arancel anual</label>${opts('costo',RANGOS.filter(x=>x.id!=='grat').map(x=>[x.id,x.n]),F.costo)}</div>
+   <div class="fgroup"><label>Tipo de carrera</label>${opts('tipo',[['Profesional','Profesional'],['Técnica','Técnica']],F.tipo)}</div>
+   <div class="fgroup"><label>Modalidad</label>${opts('mod',[['Presencial','Presencial'],['Semipresencial','Semipresencial'],['Online','Online']],F.mod)}</div>
+   <div class="fgroup"><label>Jornada</label>${opts('jor',[['Diurna','Diurna'],['Vespertina','Vespertina'],['Flexible','Flexible']],F.jor)}</div>
+   <div class="fgroup"><label>Región</label><select id="freg"><option value="">Todas las regiones</option><option value="online" ${F.reg==='online'?'selected':''}>Solo online</option>${REGIONES.map(x=>`<option ${F.reg===x?'selected':''}>${x}</option>`).join('')}</select></div>
+   <div class="fgroup"><label>Ordenar por</label><select id="forden">${[['rel','Relevancia'],['barato','Menor arancel'],['corto','Menor duración'],['empleo','Mayor empleabilidad'],['az','A–Z']].map(([k,nn])=>`<option value="${k}" ${F.orden===k?'selected':''}>${nn}</option>`).join('')}</select></div>
+   <div class="sticky-cta"><button class="btn pri" style="width:100%;padding:14px" data-close>Ver ${n} resultado${n===1?'':'s'}</button></div></div></div>`;
+}
+
+/* ---- Ficha ---- */
+let FTAB='costos', FID=null;
+function ring(pct,color,valHtml,label){const r=32,L=2*Math.PI*r;return `<div class="ring fx"><svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="${r}" stroke="#EEF1F8" stroke-width="9" fill="none"/><circle cx="40" cy="40" r="${r}" stroke="${color}" stroke-width="9" fill="none" stroke-linecap="round" stroke-dasharray="${L}" stroke-dashoffset="${L}" data-ring="${L*(1-Math.max(0,Math.min(1,pct)))}" transform="rotate(-90 40 40)" style="transition:stroke-dashoffset 1.1s cubic-bezier(.2,.8,.2,1)"/></svg><div class="rv">${valHtml}</div><small>${label}</small></div>`;}
+const PCOL={nem:'#2D5BFF',rank:'#7B3FF2',cl:'#14C8B8',m1:'#FF5C8A',m2:'#FFA41B',opt:'#2FA84A'};
+const PNOM={nem:'NEM',rank:'Ranking',cl:'C. Lectora',m1:'Matemática M1',m2:'Matemática M2',opt:'Ciencias/Historia'};
+function ficha(id){
+  if(FID!==id){FTAB='costos'; FID=id;} SHEET='ficha';
+  const c=C.find(x=>x.id===id); if(!c) return;
+  const I=inst(c), A=AREAS[c.a], ad=admision(c);
+  const maxAr=Math.max(...C.map(x=>x.arancel||0));
+  const src=`<div class="src">Fuente: ${c.meta.fuente} · ${c.meta.fecha} · Año ${c.meta.anio} · ${c.meta.verif}</div>`;
+  const icon={ok:'🎉',mid:'🤞',bad:'💪',info:'ℹ️'}[ad.cls];
+  const tabs=[['costos','💸 Costos'],['ingreso','📝 Ingreso'],['estudios','📖 Estudios'],['trabajo','💼 Trabajo'],['inst','🏫 Institución']];
+  let body='';
+  if(FTAB==='costos'){
+    const tot=costoTotal(c), totR=costoReal(c), mx=Math.max(tot||1,totR||0);
+    body=`<div class="sec"><h3>¿Cuánto cuesta la carrera completa?</h3>
+      ${tot==null?`<p class="small">${c.uf?'Arancel informado en UF: revisa el valor en la institución.':NA()}</p>`:''}<div class="hrow" style="${tot==null?'display:none':''}"><span class="nm">Si terminas a tiempo</span><div class="hb"><i data-w="${tot/mx*100}%" style="background:${A.g}"></i></div><span class="vl">${mm(tot)}</span></div>
+      ${totR?`<div class="hrow"><span class="nm">Si tardas lo promedio</span><div class="hb"><i data-w="${totR/mx*100}%" style="background:linear-gradient(90deg,#E04848,#FF7A6B)"></i></div><span class="vl">${mm(totR)}</span></div>`:''}
+      <dl class="dl" style="margin-top:12px"><dt>Arancel anual</dt><dd>${clp(c.arancel)}</dd><dt>Matrícula anual</dt><dd>${clp(c.mat)}</dd>${c.valTitulo!=null?`<dt>Costo de titulación</dt><dd>${clp(c.valTitulo)}</dd>`:''}<dt>Becas internas</dt><dd>${NA()}</dd></dl></div>
+     <div class="sec">${I.gratuidad==null?`<div class="bigstat info"><span class="e">ℹ️</span><div>Gratuidad: información no disponible<div class="xs" style="font-weight:500">Verifica si la institución está adscrita en beneficiosestudiantiles.cl.</div></div></div>`:I.gratuidad?`<div class="bigstat ok"><span class="e">🎓</span><div>Institución con gratuidad<div class="xs" style="font-weight:500;opacity:.95">Si cumples los requisitos, no pagas arancel ni matrícula durante la duración formal.${DATA_INFO&&DATA_INFO.fuenteGratuidad?' Fuente: '+DATA_INFO.fuenteGratuidad+'.':''}</div></div></div>`:`<div class="bigstat bad"><span class="e">⚠️</span><div>Institución no adscrita a gratuidad<div class="xs" style="font-weight:500;opacity:.95">Revisa becas y créditos.</div></div></div>`}
+      <button class="btn sec sm" style="margin-top:10px" data-go="financiamiento">Ver becas y créditos →</button>${src}</div>`;
+  }
+  if(FTAB==='ingreso'){
+    if(c.admND){ body=`<div class="sec"><div class="bigstat info"><span class="e">📝</span><div>Requisitos de ingreso<div class="xs" style="font-weight:500">Ponderaciones y puntajes aún no cargados para esta carrera. Consulta demre.cl o la institución.</div></div></div><dl class="dl" style="margin-top:12px"><dt>Vacantes</dt><dd>${v(c.cupos)}</dd></dl>${src}</div>`; }
+    else if(c.pond){
+      const lo=400,hi=900,pos=x=>Math.max(0,Math.min(100,(x-lo)/(hi-lo)*100));
+      body=`<div class="sec"><h3>Tu puntaje frente a esta carrera</h3>
+       <div class="scale"><div class="mk lo" style="left:${pos(c.min)}%;background:#5B6480"><span>Mínimo ${c.min}</span></div><div class="mk" style="left:${pos(c.corte)}%;background:var(--morado)"><span style="color:var(--morado)">Corte ${c.corte}</span></div>${ad.p?`<div class="youdot" data-left="${pos(ad.p)}%" title="Tú: ${ad.p}"></div>`:''}</div>
+       <div class="leg"><span style="--c:#5B6480">Mínimo para postular</span><span style="--c:var(--morado)">Último seleccionado (año anterior)</span>${ad.p?`<span style="--c:var(--azul)">Tú: ${ad.p}</span>`:''}</div>
+       ${ad.p?'':`<button class="btn pri sm" style="margin-top:12px" data-go="perfil">🎯 Ingresar mis puntajes</button>`}
+       <div class="disc">El <b>mínimo</b> te permite postular. El <b>corte</b> es el puntaje del último que quedó el año anterior. No son lo mismo. ${DISC_ADM}</div></div>
+      <div class="sec"><h3>¿Qué pesa más?</h3><div class="seg">${Object.entries(c.pond).map(([k,w])=>`<i data-w="${w}%" style="background:${PCOL[k]}" title="${PNOM[k]} ${w}%"></i>`).join('')}</div>
+       <div class="leg">${Object.entries(c.pond).map(([k,w])=>`<span style="--c:${PCOL[k]}">${PNOM[k]} <b>${w}%</b></span>`).join('')}</div>
+       <dl class="dl" style="margin-top:12px"><dt>Cupos</dt><dd>${v(c.cupos)}</dd><dt>Vías especiales</dt><dd>${NA()}</dd></dl>${src}</div>`;
+    } else body=`<div class="sec"><div class="bigstat info"><span class="e">🚪</span><div>Admisión directa<div class="xs" style="font-weight:500;opacity:.95">No necesitas PAES. Postulas directo en la institución con tu licencia de enseñanza media.</div></div></div><dl class="dl" style="margin-top:12px"><dt>Cupos</dt><dd>${v(c.cupos)}</dd></dl>${src}</div>`;
+  }
+  if(FTAB==='estudios'){
+    body=`<div class="sec"><h3>¿Cuánto dura?</h3>
+      <div class="hrow"><span class="nm">Duración formal</span><div class="hb"><i data-w="${(c.sem||0)/16*100}%" style="background:${A.g}"></i></div><span class="vl">${c.sem} sem.</span></div>
+      ${c.real?`<div class="hrow"><span class="nm">Duración real promedio</span><div class="hb"><i data-w="${c.real/16*100}%" style="background:linear-gradient(90deg,#FFA41B,#FF6F45)"></i></div><span class="vl">${c.real} sem.</span></div>`:''}
+      <dl class="dl" style="margin-top:10px"><dt>Título</dt><dd>${c.titulo}</dd><dt>Grado</dt><dd>${v(c.grado)}</dd><dt>Modalidad</dt><dd>${v(c.mod)} · ${c.jor}</dd><dt>Acreditación carrera</dt><dd>${v(c.acredCarrera)}</dd></dl></div>
+     <div class="sec"><h3>Lo que aprenderás</h3><p class="small">${v(c.perfil)}</p><p class="small" style="margin-top:6px"><b>Prácticas:</b> ${v(c.practicas)}</p><p class="small" style="margin-top:6px"><b>Después puedes seguir:</b> ${v(c.cont)}</p>
+      <b class="small" style="display:block;margin-top:10px">Malla curricular</b><div style="margin-top:6px">${c.malla?`<div class="sem">${c.malla.map((s,i)=>`<div><b>Semestre ${i+1}</b>${s.join('<br>')}</div>`).join('')}</div>`:NA()}</div>${src}</div>`;
+  }
+  if(FTAB==='trabajo' && c.emp1==null){ body=`<div class="sec"><h3>Empleabilidad e ingresos</h3><p class="small">${NA()}</p><div class="disc">Estos datos se cargan desde MiFuturo.cl (estadísticas por carrera genérica${c.generica?': '+esc(c.generica):''}).</div>${src}</div>`; }
+  else if(FTAB==='trabajo'){
+    const mxIng=Math.max(...C.map(x=>x.ing?x.ing[1]:0));
+    body=`<div class="sec"><h3>¿Encuentran trabajo?</h3><div class="rings" style="padding:6px 0 0;grid-template-columns:1fr 1fr">${ring(c.emp1/100,A.k1,`<span data-count="${c.emp1}" data-fmt="pct">0%</span>`,'Al 1er año')}${ring(c.emp2/100,'#14C8B8',`<span data-count="${c.emp2}" data-fmt="pct">0%</span>`,'Al 2° año')}</div></div>
+     <div class="sec"><h3>¿Cuánto ganan? <span class="xs muted" style="font-weight:600">bruto mensual, 4° año</span></h3>
+      <div class="hb" style="height:22px;position:relative"><i data-w="${c.ing[1]/mxIng*100}%" style="background:linear-gradient(90deg,#12A36B,#7ED957)"></i></div>
+      <div style="display:flex;justify-content:space-between;margin-top:6px;font-weight:800"><span>${mm(c.ing[0]*1e6)}</span><span>${mm(c.ing[1]*1e6)}</span></div>
+      <div class="tags" style="margin-top:12px">${c.sect.map(s=>`<span class="tag b">${s}</span>`).join('')}</div>
+      <div class="disc">Indicadores estadísticos, no garantías individuales. Fuente prevista: MiFuturo.cl.</div>${src}</div>`;
+  }
+  if(FTAB==='inst'){
+    body=`<div class="sec"><h3>${I.n}</h3><p class="small muted">${TIPO_INST[I.t]} · Sede ${I.com}, ${I.reg}</p>
+      <b class="small" style="display:block;margin:12px 0 6px">Acreditación institucional: ${I.acred==null?'información no disponible':I.acred===0?'<span style="color:var(--bad)">No acreditada</span>':I.acred+' de 7 años'+(DATA_MODE==='demo'?' (demo)':'')+(I.acredNivel?' · '+I.acredNivel:'')}</b>${I.acredHasta?`<div class="xs muted" style="margin:-2px 0 6px">Vigencia informada hasta ${I.acredHasta}${DATA_INFO&&DATA_INFO.fuenteAcred?' · '+DATA_INFO.fuenteAcred:''}</div>`:''}<div class="dots">${[1,2,3,4,5,6,7].map(n=>`<i class="${I.acred&&n<=I.acred?'on':''}" style="transition-delay:${n*80}ms"></i>`).join('')}</div>
+      <dl class="dl" style="margin-top:12px"><dt>Áreas acreditadas</dt><dd>${v(I.acredAreas)}</dd><dt>Autonomía</dt><dd>${I.autonoma==null?NA():I.autonoma?'Autónoma':'En licenciamiento'}</dd><dt>Reconocimiento oficial</dt><dd>${DATA_MODE==='oficial'?'Sí (informada en base oficial)':'Sí (demo)'}</dd>${I.cruch?'<dt>Consejo de Rectores</dt><dd>CRUCH</dd>':''}${I.web?`<dt>Sitio web</dt><dd><a href="https://${String(I.web).replace(/^https?:\/\//,'')}" target="_blank" rel="noopener">${esc(I.web)}</a></dd>`:''}</dl>
+      <div class="disc">Acreditación institucional ≠ acreditación de la carrera. Verifica ambas en cnachile.cl.</div></div>
+     <div class="sec"><h3>Vida estudiantil</h3><div class="tags">${I.vida.map(x=>`<span class="tag t">${x}</span>`).join('')}${I.residencias?'<span class="tag g">🏠 Residencias</span>':''}</div>${src}</div>`;
+  }
+  $('#sheet-root').innerHTML=`<div class="sheet-bg" data-close><div class="sheet" role="dialog" aria-label="Ficha de carrera">
+   <div class="hd2" style="background:${A.g}"><button class="x" data-close>✕</button><span class="em">${A.e}</span><div class="xs" style="opacity:.9;font-weight:800">${A.n.toUpperCase()}</div><h2 style="margin:6px 0 2px;color:#fff;font-size:23px;padding-right:70px">${esc(c.n)}</h2><div class="small" style="opacity:.95">${I.n} · ${I.com}</div>
+    <div class="acts"><button class="btn sm" style="background:#fff;color:var(--ink)" data-fav="${c.id}">${S.favs.includes(c.id)?'❤️ Guardada':'🤍 Guardar'}</button><button class="btn sm" style="background:rgba(255,255,255,.22);color:#fff" data-cmp="${c.id}">${S.comp.includes(c.id)?'✓ Comparando':'⚖️ Comparar'}</button></div></div>
+   <div class="rings">${ring((c.arancel||0)/maxAr,'#2D5BFF',c.arancel!=null?`<span data-count="${c.arancel}" data-fmt="mm">$0</span>`:(c.uf?'UF':'—'),'Arancel anual')}${ring((c.sem||0)/14,'#7B3FF2',anios(c.sem).replace(' años','<small style="display:inline;font-size:10px"> años</small>'),'Duración')}${c.emp1!=null?ring(c.emp1/100,'#14C8B8',`<span data-count="${c.emp1}" data-fmt="pct">0%</span>`,'Con empleo'):ring(c.cupos?Math.min(1,c.cupos/300):0,'#14C8B8',c.cupos??'—','Vacantes')}</div>
+   ${c.admND?'':`<div style="padding:12px 12px 0"><div class="bigstat ${ad.cls} fx"><span class="e">${icon}</span><div>${ad.t}</div></div></div>`}
+   <div class="tabs">${tabs.map(([k,n])=>`<button class="tab ${FTAB===k?'on':''}" data-tab="${k}">${n}</button>`).join('')}</div>
+   <div class="tabc" style="padding-bottom:24px">${body}</div></div></div>`;
+  animate($('#sheet-root'));
+}
+function closeSheet(){ $('#sheet-root').innerHTML=''; SHEET=''; }
+
+/* ---- Comparar ---- */
+const CCOL=['#2D5BFF','#FF5C8A','#14C8B8','#FFA41B'];
+function vComparar(){
+  const L=S.comp.map(id=>C.find(c=>c.id===id)).filter(Boolean);
+  if(!L.length) return `<h1>Comparar</h1><div class="empty"><div class="e" style="font-size:60px;animation:float 3s infinite">⚖️</div><b>Elige hasta 4 carreras</b><br>Toca ⚖️ en cualquier carrera para agregarla.<br><button class="btn pri" style="margin-top:14px" data-go="explorar">Explorar carreras</button></div>`;
+  const metric=(t,sub,fn,fmt,mode)=>{const vals=L.map(fn); const mx=Math.max(1,...vals.filter(x=>x!=null)); const b=mode==='min'?Math.min(...vals.filter(x=>x!=null)):mx;
+    return `<div class="mcard fx"><h3>${t}<small>${sub}</small></h3>${L.map((c,i)=>{const x=vals[i];return `<div class="hrow ${L.length>1&&x===b?'best':''}"><span class="nm" style="color:${CCOL[i]}">${esc(c.n.length>18?c.n.slice(0,17)+'…':c.n)}</span><div class="hb"><i data-w="${x==null?0:x/mx*100}%" style="background:${CCOL[i]}"></i></div><span class="vl">${x==null?'—':fmt(x)}</span></div>`}).join('')}</div>`;};
+  const pros=L.map((c,i)=>{const p=[],n=[]; const mn=f=>Math.min(...L.map(f).filter(x=>x!=null)), mxx=f=>Math.max(...L.map(f).filter(x=>x!=null));
+    if(c.arancel===mn(x=>x.arancel)) p.push('Menor arancel'); if(c.sem===mn(x=>x.sem)) p.push('Más corta'); if(c.emp1===mxx(x=>x.emp1)) p.push('Mayor empleabilidad'); if(inst(c).gratuidad) p.push('Acceso a gratuidad'); if(c.emp1==null) {}
+    if(L.length>1&&c.arancel===mxx(x=>x.arancel)) n.push('Arancel más alto'); if(inst(c).gratuidad===false) n.push('Sin gratuidad'); if(c.real&&c.real-c.sem>=2) n.push('Suele tardar más de lo formal'); if(admision(c).cat==='mejorar') n.push('Tu puntaje está bajo el corte');
+    return {c,i,p,n};});
+  return `<h1>Comparar</h1>
+  <div class="cmpsel">${L.map((c,i)=>`<span><i style="background:${CCOL[i]}"></i>${esc(c.n)} · ${inst(c).n.replace('Universidad','U.')}<button data-cmp="${c.id}" aria-label="Quitar">✕</button></span>`).join('')}${L.length<4?`<button class="fbtn" data-go="explorar">＋ Agregar</button>`:''}</div>
+  ${metric('💰 Costo total','menor es mejor',c=>costoTotal(c),mm,'min')}
+  ${metric('⏱️ Duración','semestres',c=>c.sem,x=>x+' sem.','min')}
+  ${L.some(c=>c.emp1!=null)?metric('💼 Empleabilidad','al 1er año',c=>c.emp1,x=>x+'%','max'):''}
+  ${L.some(c=>c.ing)?metric('💵 Ingreso','bruto mensual, 4° año',c=>c.ing?c.ing[1]*1e6:null,mm,'max'):''}
+  ${L.some(c=>inst(c).acred!=null)?metric('🛡️ Acreditación','años de la institución',c=>inst(c).acred,x=>x+' años','max'):''}${L.some(c=>c.cupos)?metric('👥 Vacantes','primer año',c=>c.cupos,x=>x,'max'):''}
+  <div class="mcard fx"><h3>🎯 ¿Te alcanza?</h3>${L.map((c,i)=>{const a=admision(c),st=STAT[a.cat];return `<div class="hrow" style="grid-template-columns:1fr auto"><span class="nm" style="color:${CCOL[i]}">${esc(c.n)}</span>${st?`<span class="tag ${st[0]}">${st[1]}</span>`:'<a href="#perfil" class="xs">Ingresa puntajes</a>'}</div>`}).join('')}</div>
+  <h2>Veredicto rápido</h2>
+  ${pros.map(({c,i,p,n})=>`<div class="mcard fx" style="border-left:6px solid ${CCOL[i]}"><b>${esc(c.n)}</b> <span class="xs muted">· ${inst(c).n}</span><div class="two" style="margin-top:8px"><div class="small"><b style="color:var(--ok)">👍 A favor</b><br>${p.length?p.join('<br>'):'—'}</div><div class="small"><b style="color:var(--bad)">👀 Ojo con</b><br>${n.length?n.join('<br>'):'—'}</div></div></div>`).join('')}
+  <details><summary>📋 Ver tabla completa</summary><div class="in scroll-x" style="padding:0 0 4px"><table class="cmp"><tbody>
+   ${[['Sede',c=>inst(c).com],['Modalidad',c=>c.mod+' · '+c.jor],['Arancel anual',c=>clp(c.arancel)],['Matrícula',c=>clp(c.mat)],['Gratuidad',c=>inst(c).gratuidad?'Sí':'No'],['Puntaje mínimo',c=>c.pond?c.min:'No aplica'],['Corte',c=>c.pond?c.corte:'Admisión directa'],['Título',c=>c.titulo],['Continuidad',c=>c.cont||NA()]].map(([t,f])=>`<tr><th>${t}</th>${L.map(c=>`<td>${f(c)}</td>`).join('')}</tr>`).join('')}
+  </tbody></table></div></details>
+  <div class="two"><button class="btn pri" data-share>📤 Compartir</button><button class="btn ghost" data-clearcmp>Vaciar</button></div>
+  <div class="disc">Datos de demostración. Empleabilidad e ingresos son indicadores estadísticos, no garantías.</div>`;
+}
+function shareText(){
+  const L=S.comp.map(id=>C.find(c=>c.id===id));
+  return 'Mi comparación en Elige tu futuro (datos demo):\n'+L.map(c=>`• ${c.n} – ${inst(c).n} (${inst(c).com}): ${c.sem} sem., arancel ${clp(c.arancel)}, costo total ${clp(costoTotal(c))}, gratuidad ${inst(c).gratuidad?'sí':'no'}, corte ${c.corte??'admisión directa'}`).join('\n');
+}
+
+/* ---- Favoritos ---- */
+function vFavoritos(){
+  const L=S.favs.map(id=>C.find(c=>c.id===id)).filter(Boolean);
+  return `<h1>Favoritos</h1>${L.length?`<p class="small muted" style="margin:4px 0 12px">Guardadas en este dispositivo, sin necesidad de cuenta.</p>${L.map(card).join('')}${L.length>=2?`<button class="btn pri" style="width:100%" data-favcmp>⚖️ Comparar mis favoritas (máx. 4)</button>`:''}`:`<div class="empty"><div class="e">🤍</div>Aún no guardas carreras. Toca 🤍 en cualquier tarjeta.<br><button class="btn pri sm" style="margin-top:12px" data-go="explorar">Explorar</button></div>`}`;
+}
+
+/* ---- Perfil (¿Me alcanza?) ---- */
+function vPerfil(){
+  const p=S.perfil; const inp=(k,l,ph)=>`<div><label class="xs muted" style="font-weight:700">${l}</label><input class="inp" type="number" inputmode="numeric" min="100" max="1000" data-p="${k}" value="${esc(p[k])}" placeholder="${ph}"></div>`;
+  const elegibles=C.filter(c=>c.pond).map(c=>({c,a:admision(c)}));
+  const cnt=k=>elegibles.filter(x=>x.a.cat===k).length;
+  return `<h1>Mi perfil</h1><p class="small muted" style="margin:4px 0 12px">Sin registro. Tus datos se guardan solo en este dispositivo y puedes borrarlos cuando quieras.</p>
+  <div class="card"><h3>🎯 ¿Me alcanza para entrar?</h3><p class="small muted" style="margin:4px 0 10px">Ingresa tus puntajes (escala PAES 100–1000).</p>
+   <div class="two">${inp('nem','Puntaje NEM','Ej: 650')}${inp('rank','Puntaje Ranking','Ej: 700')}${inp('cl','Competencia Lectora','Ej: 620')}${inp('m1','Matemática M1','Ej: 600')}${inp('m2','Matemática M2 (opcional)','Ej: 500')}${inp('cien','Ciencias (opcional)','Ej: 580')}${inp('hist','Historia (opcional)','Ej: 600')}</div>
+   <button class="btn pri" style="width:100%;margin-top:12px" data-saveperfil>Calcular mis posibilidades</button>
+   ${DATA_MODE==='oficial'?'<div class="status info" style="margin-top:12px">ℹ️ La base oficial cargada aún no incluye ponderaciones ni puntajes de corte. Tus puntajes quedan guardados y se usarán cuando se incorporen los datos de DEMRE.</div>':''}
+   ${p.m1&&DATA_MODE==='demo'?`<div class="two" style="margin-top:12px"><div class="status ok">✓ ${cnt('cumple')} te alcanzan</div><div class="status mid">≈ ${cnt('competitiva')} competitivas</div><div class="status bad">✗ ${cnt('mejorar')} requieren mejorar</div><div class="status info">+ ${C.filter(c=>!c.pond).length} con admisión directa</div></div><div class="disc">${DISC_ADM}</div>`:''}
+  </div>
+  ${p.m1&&DATA_MODE==='demo'?`<h2>Tus resultados por carrera</h2>${elegibles.sort((a,b)=>(b.a.p-b.c.corte)-(a.a.p-a.c.corte)).map(({c,a})=>`<div class="card" data-open="${c.id}" style="cursor:pointer"><div style="display:flex;justify-content:space-between;gap:8px"><b class="small">${esc(c.n)} · ${inst(c).n}</b><span class="chip ${a.cls==='ok'?'g':a.cls==='mid'?'w':'r'}">${a.p??'—'}</span></div><div class="xs muted" style="margin-top:4px">Mínimo ${c.min} · Corte año anterior ${c.corte}</div></div>`).join('')}`:''}
+  <div class="card"><h3>⚙️ Mis preferencias</h3><p class="small muted" style="margin:4px 0 10px">Se usan en "Mi ranking personal".</p>
+   <label class="xs muted" style="font-weight:700">Región donde vives</label><select data-pref="region"><option value="">Sin preferencia</option>${REGIONES.map(x=>`<option ${p.region===x?'selected':''}>${x}</option>`).join('')}</select>
+   <label class="xs muted" style="font-weight:700;display:block;margin-top:8px">Arancel anual máximo que podrías pagar</label><select data-pref="presupuesto"><option value="">Sin límite</option>${[[0,'Solo con gratuidad'],[1000000,'Hasta $1 millón'],[2000000,'Hasta $2 millones'],[4000000,'Hasta $4 millones']].map(([k,n])=>`<option value="${k}" ${String(p.presupuesto)===String(k)?'selected':''}>${n}</option>`).join('')}</select>
+   <label class="xs muted" style="font-weight:700;display:block;margin-top:8px">Modalidad preferida</label><select data-pref="modalidad"><option value="">Cualquiera</option>${['Presencial','Semipresencial','Online'].map(x=>`<option ${p.modalidad===x?'selected':''}>${x}</option>`).join('')}</select>
+   <button class="btn sec" style="width:100%;margin-top:12px" data-go="ranking">Ver mi ranking personal →</button>
+  </div>
+  <div class="card"><h3>🔒 Privacidad</h3><p class="small">No pedimos RUT, nombre ni datos económicos identificables. La geolocalización es opcional y no se usa en esta versión. La publicidad es <b>no personalizada</b>.</p><button class="btn ghost sm" style="margin-top:10px" data-wipe>🗑️ Borrar todos mis datos</button> <button class="btn ghost sm" style="margin-top:10px" data-go="privacidad">📄 Política de privacidad</button></div>`;
+}
+
+/* ---- Test vocacional ---- */
+const TEST=[
+ {q:'Un sábado libre, prefieres…',o:[['🧪','Hacer un experimento o ver un documental de ciencia',{cien:2,salud:1}],['🎨','Dibujar, editar videos o hacer música',{arte:2}],['🤝','Juntarte con amigos y ayudar en algo comunitario',{soc:2,edu:1}],['🛠️','Arreglar algo o armar un proyecto',{tec:2}]]},
+ {q:'¿Qué asignatura disfrutas más?',o:[['➗','Matemática',{tec:2,neg:1}],['🧬','Biología o Química',{salud:2,cien:2}],['📜','Historia o Lenguaje',{soc:1,der:2}],['🎭','Artes o Música',{arte:2}]]},
+ {q:'Te imaginas trabajando con…',o:[['👥','Personas',{salud:1,edu:2,soc:1}],['💻','Tecnología',{tec:2}],['🌿','Naturaleza y animales',{agro:2,cien:1}],['📊','Números y datos',{neg:2,tec:1}]]},
+ {q:'¿Qué tipo de trabajo prefieres?',o:[['🔧','Práctico, con las manos',{tec:1,serv:2,salud:1}],['📚','Teórico, de investigar y analizar',{cien:2,der:1}],['💡','Creativo, inventando cosas nuevas',{arte:2,neg:1}]]},
+ {q:'¿Dónde te gustaría trabajar?',o:[['🏞️','En terreno, al aire libre',{agro:2,cien:1}],['🏥','En un hospital o centro de salud',{salud:3}],['🏢','En una oficina',{neg:2,der:1}],['🏫','En un colegio o con la comunidad',{edu:2,soc:1}]]},
+ {q:'¿Te gustaría tener tu propio negocio?',o:[['🚀','¡Sí! Me encanta emprender',{neg:2,serv:1}],['🤔','Tal vez, más adelante',{neg:1}],['🏛️','Prefiero un empleo estable',{salud:1,edu:1}]]},
+ {q:'¿Qué valoras más en tu futuro trabajo?',o:[['🔒','Estabilidad',{salud:1,edu:1,neg:1}],['🗽','Independencia',{der:1,arte:1,neg:1}],['✨','Crear y expresarme',{arte:2}],['❤️','Ayudar a otros',{salud:2,soc:2}]]},
+ {q:'Un amigo tiene un problema. Tú…',o:[['👂','Lo escucho y lo apoyo',{soc:2,salud:1}],['🧩','Busco una solución lógica',{tec:1,der:1}],['📣','Lo defiendo si es injusto',{der:2}],['📖','Le explico paso a paso',{edu:2}]]},
+ {q:'¿Qué video verías primero?',o:[['🤖','Cómo funciona la inteligencia artificial',{tec:2}],['🧠','Por qué actuamos como actuamos',{soc:2}],['🏗️','Edificios increíbles del mundo',{arte:2,tec:1}],['🐋','La vida en el fondo del mar',{cien:2,agro:1}]]},
+ {q:'¿Cuánto tiempo quieres estudiar?',o:[['⚡','2 a 3 años y empezar a trabajar pronto',{_corta:1}],['📘','4 a 5 años',{_media:1}],['🎓','Lo que sea necesario (6+ años)',{_larga:1}]]},
+ {q:'Cocinar para un evento te parece…',o:[['😍','¡Un sueño!',{serv:3}],['🙂','Entretenido de vez en cuando',{serv:1}],['😅','No es lo mío',{}]]},
+ {q:'¿Qué frase te representa más?',o:[['🌎','Quiero cuidar el planeta',{agro:2,cien:1}],['⚖️','Quiero que las cosas sean justas',{der:2,soc:1}],['📈','Quiero hacer crecer proyectos',{neg:2}],['🩹','Quiero mejorar la salud de las personas',{salud:2}]]}
+];
+let T={i:0,sc:{}};
+function vTest(){
+  if(T.i>=TEST.length || (S.test && T.i===0 && T.done!==false && T.view==='res')) return testResult();
+  const q=TEST[T.i];
+  return `<h1>Test vocacional</h1><p class="small muted">Pregunta ${T.i+1} de ${TEST.length} · No hay respuestas buenas ni malas</p>
+  <div class="prog"><i style="width:${T.i/TEST.length*100}%"></i></div>
+  <div class="q"><h2 style="margin:0">${q.q}</h2><div class="qopts">${q.o.map((o,k)=>`<button class="qopt" data-ans="${k}"><span class="em">${o[0]}</span>${o[1]}</button>`).join('')}</div></div>
+  ${T.i>0?`<button class="btn ghost sm" style="margin-top:12px" data-back>← Anterior</button>`:''}
+  ${S.test&&T.i===0?`<button class="btn sec sm" style="margin-top:12px;margin-left:6px" data-lastres>Ver mi último resultado</button>`:''}
+  ${adSlot('orientacion')}`;
+}
+function testResult(){
+  const sc=S.test.sc; const dur=S.test.dur;
+  const top=Object.entries(sc).filter(([k])=>!k.startsWith('_')).sort((a,b)=>b[1]-a[1]).slice(0,3);
+  const max=top[0]?top[0][1]:1;
+  const why={salud:'disfrutas ayudar a otros y te interesan la biología y el cuidado',tec:'te atrae la tecnología, resolver problemas y construir cosas',cien:'tienes curiosidad científica y te gusta investigar',edu:'te motiva enseñar y acompañar a otras personas',soc:'te interesa comprender a las personas y la sociedad',arte:'valoras crear, diseñar y expresarte',neg:'te atraen los números, los proyectos y emprender',der:'te importa la justicia y argumentar con fundamentos',agro:'te gusta la naturaleza y el trabajo en terreno',serv:'disfrutas la cocina, la atención y el trabajo práctico'};
+  const areas=top.map(t=>t[0]);
+  let rec=C.filter(c=>areas.includes(c.a));
+  if(dur==='_corta') rec.sort((a,b)=>a.sem-b.sem); else rec.sort((a,b)=>areas.indexOf(a.a)-areas.indexOf(b.a));
+  const alt=C.filter(c=>!areas.includes(c.a)&&sc[c.a]>0).slice(0,3);
+  const perfilTxt = top.map(t=>AREAS[t[0]].n).join(', ');
+  return `<h1>Tu perfil vocacional</h1>
+  <div class="hero" style="margin-top:12px"><div class="small" style="position:relative;z-index:1;opacity:.9">Tus intereses apuntan a</div><h2 style="color:#fff;margin:4px 0;position:relative;z-index:1">${top.map(t=>AREAS[t[0]].e).join(' ')} ${perfilTxt}</h2><p class="small">${dur==='_corta'?'Prefieres una formación corta: revisa también carreras técnicas.':dur==='_larga'?'Estás dispuesto/a a una formación larga.':'Prefieres una carrera de duración media.'}</p></div>
+  <div class="disc" style="margin-top:10px">Este test es una orientación para explorar, <b>no un diagnóstico psicológico ni una decisión definitiva</b>. Conversa los resultados con tu familia u orientador/a.</div>
+  <h2>Áreas recomendadas y por qué</h2>
+  ${top.map(([k,s])=>`<div class="card"><div style="display:flex;justify-content:space-between"><b>${AREAS[k].e} ${AREAS[k].n}</b><span class="small muted">${Math.round(s/max*100)}% afinidad</span></div><div class="bar" style="margin:6px 0"><i style="width:${s/max*100}%"></i></div><p class="small">Aparece porque ${why[k]}.</p></div>`).join('')}
+  <h2>Carreras compatibles</h2>${rec.slice(0,8).map((c,i)=>card(c,i)).join('')}
+  ${alt.length?`<h2>Alternativas para explorar</h2>${alt.map(card).join('')}`:''}
+  <div class="two"><button class="btn pri" data-usetest>🏆 Ver mi ranking personal</button><button class="btn ghost" data-retest>Repetir test</button></div>`;
+}
+
+/* ---- Ranking personal / recomendaciones ---- */
+function vRanking(){
+  const p=S.perfil; const areas=S.test?Object.entries(S.test.sc).filter(([k])=>!k.startsWith('_')).sort((a,b)=>b[1]-a[1]).slice(0,3).map(x=>x[0]):[];
+  const pres=p.presupuesto===''?null:+p.presupuesto;
+  const res=C.map(c=>{
+    const I=inst(c); let s=50; const why=[], warn=[];
+    if(areas.length){const k=areas.indexOf(c.a); if(k>=0){s+=30-k*8; why.push('Coincide con tu interés en '+AREAS[c.a].n);} else s-=20;}
+    if(p.region){ if(I.reg===p.region){s+=12;why.push('Está en tu región');} else if(c.mod==='Online'){s+=8;why.push('Puedes estudiarla online');} else {s-=8;warn.push('Implica mudarte a '+I.reg);} }
+    if(pres!=null){ if(pres===0){ if(I.gratuidad){s+=8;why.push('Institución con gratuidad');} else {s-=25;warn.push('No tiene gratuidad');} } else if(c.arancel<=pres){s+=8;why.push('Arancel dentro de tu presupuesto');} else if(I.gratuidad){warn.push('Supera tu presupuesto, salvo que obtengas gratuidad');s-=6;} else {s-=20;warn.push('Supera tu presupuesto');} }
+    if(p.modalidad){ if(c.mod===p.modalidad){s+=6;why.push('Modalidad '+c.mod.toLowerCase());} else s-=4; }
+    if(S.test&&S.test.dur==='_corta'&&c.sem<=5){s+=8;why.push('Carrera corta, como prefieres');}
+    const a=admision(c);
+    if(a.cat==='cumple'){s+=10;why.push('Tu puntaje supera el corte histórico');} else if(a.cat==='competitiva'){s+=3;warn.push('Tu puntaje está cerca del corte');} else if(a.cat==='mejorar'){s-=15;warn.push('Tu puntaje está bajo el corte o el mínimo');} else if(a.cat==='directa'){why.push('Admisión directa, sin PAES');}
+    if(c.emp1>=85) why.push('Alta empleabilidad ('+c.emp1+'%)');
+    return {c,s,why,warn,a};
+  }).sort((x,y)=>y.s-x.s);
+  const grp=[['Muy compatibles con tu perfil',r=>r.s>=85&&r.warn.length===0,'g'],['Buenas alternativas',r=>r.s>=60&&r.warn.length<=1,'b'],['Alternativas que requieren revisar requisitos',r=>r.a.cat==='mejorar'||r.a.cat==='sin',''],['Opciones que podrían ser un desafío académico o económico',r=>true,'r']];
+  const used=new Set();
+  const blocks=grp.map(([t,f,cl])=>{const L=res.filter(r=>!used.has(r.c.id)&&f(r)).slice(0,6); L.forEach(r=>used.add(r.c.id)); return L.length?`<h2>${t}</h2>${L.map(r=>`${card(r.c)}<div class="disc" style="margin:-6px 0 14px">${r.why.length?'<b>Por qué aparece:</b> '+r.why.join(' · '):''}${r.warn.length?`<br><b>A considerar:</b> ${r.warn.join(' · ')}`:''}</div>`).join('')}`:''}).join('');
+  return `<h1>Mi ranking personal</h1>
+  <div class="card small"><b>Tu perfil actual:</b> ${areas.length?'Intereses: '+areas.map(a=>AREAS[a].n).join(', '):'<a href="#test">Haz el test</a> para considerar tus intereses'} · ${p.region?'Región: '+p.region:'Sin región'} · ${pres==null?'Sin límite de presupuesto':pres===0?'Solo gratuidad':'Hasta '+mm(pres)} · ${p.m1?'Con puntajes PAES':'<a href="#perfil">Sin puntajes</a>'}<br><button class="btn sec sm" style="margin-top:8px" data-go="perfil">Cambiar preferencias</button></div>
+  ${blocks}`;
+}
+
+/* ---- Financiamiento ---- */
+const BENEF=[
+ {n:'Gratuidad',e:'🎓',d:'Cubre arancel y matrícula durante la duración formal de la carrera.',a:'Estudiantes de los hogares de menores ingresos (referencia: 60% de menores ingresos) que se matriculan en instituciones adscritas.',req:'Pertenecer al tramo socioeconómico exigido, institución adscrita, no tener título profesional previo (con excepciones).',doc:'Formulario Único de Acreditación Socioeconómica (FUAS); documentos si se solicitan.',tramo:60,tipos:['U','IP','CFT']},
+ {n:'Beca Bicentenario',e:'🏛️',d:'Cubre parte o el total del arancel de referencia en universidades.',a:'Estudiantes de menores ingresos que estudian en universidades acreditadas.',req:'Requisitos socioeconómicos y de puntaje definidos en cada proceso.',doc:'FUAS.',tramo:70,tipos:['U']},
+ {n:'Beca Juan Gómez Millas',e:'📗',d:'Aporte anual para el arancel.',a:'Estudiantes de menores ingresos en universidades, IP o CFT acreditados.',req:'Requisitos socioeconómicos y académicos del proceso vigente.',doc:'FUAS.',tramo:70,tipos:['U','IP','CFT']},
+ {n:'Beca Nuevo Milenio',e:'🔧',d:'Aporte anual para carreras técnicas o profesionales en IP y CFT.',a:'Estudiantes de menores ingresos en IP o CFT acreditados.',req:'Requisitos socioeconómicos y de notas del proceso vigente.',doc:'FUAS.',tramo:70,tipos:['IP','CFT']},
+ {n:'Beca Excelencia Académica',e:'⭐',d:'Aporte anual para estudiantes destacados.',a:'Estudiantes del 10% de mejores egresados de su establecimiento.',req:'Destacar en notas de enseñanza media y cumplir requisito socioeconómico.',doc:'FUAS.',tramo:80,tipos:['U','IP','CFT'],exc:true},
+ {n:'Beca Vocación de Profesor',e:'🍎',d:'Apoyo para estudiar pedagogía.',a:'Estudiantes con buen puntaje que eligen pedagogías elegibles.',req:'Puntaje PAES exigido y matricularse en primer año de una pedagogía elegible.',doc:'FUAS y postulación al beneficio.',tramo:100,tipos:['U'],ped:true},
+ {n:'Beca de Articulación',e:'🔗',d:'Apoyo para continuar estudios después de un título técnico.',a:'Titulados de carreras técnicas que continúan una carrera profesional.',req:'Título técnico previo y requisitos socioeconómicos.',doc:'FUAS.',tramo:70,tipos:['U','IP'],art:true},
+ {n:'Beca de Alimentación (BAES) JUNAEB',e:'🍽️',d:'Monto mensual para alimentación mediante tarjeta.',a:'Estudiantes que reciben gratuidad o ciertas becas de arancel.',req:'Asignación asociada a otros beneficios.',doc:'No requiere postulación aparte en la mayoría de los casos.',tramo:70,tipos:['U','IP','CFT']},
+ {n:'Crédito con Garantía Estatal (CAE)',e:'🏦',d:'Crédito para financiar el arancel, que se paga después de egresar.',a:'Estudiantes que necesitan financiamiento y no cubren el total con becas.',req:'Requisitos académicos e institución participante. Revisa el estado de la reforma al sistema de financiamiento.',doc:'FUAS y trámites con la institución financiera.',tramo:100,tipos:['U','IP','CFT'],cred:true},
+ {n:'Fondo Solidario de Crédito Universitario',e:'🤝',d:'Crédito para universidades del Consejo de Rectores (CRUCH).',a:'Estudiantes de menores ingresos en universidades CRUCH.',req:'Requisitos socioeconómicos y de puntaje.',doc:'FUAS.',tramo:80,tipos:['U'],cred:true}
+];
+function vFin(){
+  return `<h1>¿Cuánto puedo pagar?</h1><p class="small muted" style="margin:4px 0 12px">Gratuidad, becas y créditos para estudiar en Chile.</p>
+  <div class="card"><h3>🧮 Simulador de beneficios</h3><p class="small muted" style="margin:4px 0 10px">Solo datos generales. No pedimos RUT ni ingresos exactos.</p>
+   <label class="xs muted" style="font-weight:700">Tu hogar está aproximadamente en el…</label>
+   <select id="sim-tramo"><option value="60">60% de menores ingresos</option><option value="70">70% de menores ingresos</option><option value="80">80% de menores ingresos</option><option value="90">90% de menores ingresos</option><option value="100">Sobre el 90% / no sé</option></select>
+   <label class="xs muted" style="font-weight:700;display:block;margin-top:8px">¿Dónde quieres estudiar?</label>
+   <select id="sim-tipo"><option value="U">Universidad</option><option value="IP">Instituto Profesional</option><option value="CFT">Centro de Formación Técnica</option></select>
+   <div style="margin-top:10px" class="small"><label><input type="checkbox" id="sim-exc"> Estoy en el 10% de mejores notas de mi colegio</label><br><label><input type="checkbox" id="sim-ped"> Quiero estudiar pedagogía</label><br><label><input type="checkbox" id="sim-art"> Ya tengo un título técnico</label></div>
+   <button class="btn pri" style="width:100%;margin-top:12px" data-sim>Ver a qué podría postular</button><div id="sim-out"></div></div>
+  <div class="status info">📌 Para casi todos estos beneficios se postula llenando el <b>FUAS</b> en <a href="https://portal.beneficiosestudiantiles.cl" target="_blank" rel="noopener">beneficiosestudiantiles.cl</a>. Las fechas y requisitos cambian cada año: verifícalos siempre en el sitio oficial.</div>
+  ${adSlot('orientacion')}
+  <h2>Beneficios estatales</h2>
+  ${BENEF.map(b=>`<details><summary>${b.e} ${b.n}</summary><div class="in"><p><b>En qué consiste:</b> ${b.d}</p><p><b>A quién está dirigido:</b> ${b.a}</p><p><b>Requisitos:</b> ${b.req}</p><p><b>Documentación:</b> ${b.doc}</p><p><b>Fechas de postulación:</b> ${NA()} — se publican cada año.</p><p><b>Sitio oficial:</b> <a href="https://portal.beneficiosestudiantiles.cl" target="_blank" rel="noopener">beneficiosestudiantiles.cl</a></p><div class="xs muted">Estado: texto referencial, pendiente de verificación con la normativa del proceso vigente.</div></div></details>`).join('')}
+  <details><summary>🏫 Becas internas de las instituciones</summary><div class="in"><p>Cada institución tiene becas y descuentos propios (por hermanos, deporte, mérito, convenio). En la ficha de cada carrera verás esta información cuando esté disponible.</p></div></details>
+  <details><summary>📍 Beneficios regionales y municipales</summary><div class="in"><p>Algunas municipalidades y gobiernos regionales entregan becas o apoyo para residencia y transporte. Consulta en tu municipio. ${NA()} para tu comuna en esta versión.</p></div></details>`;
+}
+function simular(){
+  const tramo=+$('#sim-tramo').value, tipo=$('#sim-tipo').value, exc=$('#sim-exc').checked, ped=$('#sim-ped').checked, art=$('#sim-art').checked;
+  const r=BENEF.filter(b=>b.tipos.includes(tipo)&&tramo<=b.tramo&&(!b.exc||exc)&&(!b.ped||ped)&&(!b.art||art));
+  $('#sim-out').innerHTML=`<div style="margin-top:12px">${r.length?r.map(b=>`<div class="status ${b.cred?'mid':'ok'}" style="margin-bottom:6px">${b.e} ${b.n}${b.cred?' (crédito: se devuelve)':''}</div>`).join(''):'<div class="status mid">Según los datos ingresados no aparecen beneficios estatales de arancel. Revisa becas internas y créditos.</div>'}</div><div class="disc">Resultado <b>orientativo</b>, basado en tramos referenciales. La asignación definitiva depende de la evaluación del Mineduc y de cada organismo.</div>`;
+}
+
+/* ---- Normativa ---- */
+function vNormativa(){
+  const leyes=[
+   ['Ley N.º 21.091 sobre Educación Superior','Ordena el sistema: crea la Subsecretaría y la Superintendencia de Educación Superior, regula la gratuidad y el Sistema de Acceso.','Te protege como estudiante: puedes reclamar ante la Superintendencia y la gratuidad tiene base legal.'],
+   ['Ley N.º 20.129 de aseguramiento de la calidad','Regula la acreditación que realiza la Comisión Nacional de Acreditación (CNA). Fue modificada para hacer obligatoria la acreditación institucional.','Una institución acreditada fue evaluada en su calidad. Algunas carreras (Medicina, Odontología y Pedagogías) deben estar acreditadas.'],
+   ['Ley N.º 20.370, Ley General de Educación','Define niveles y principios de la educación chilena y el reconocimiento oficial de las instituciones.','Asegura que tu título sea válido si la institución tiene reconocimiento oficial.'],
+   ['Ley N.º 21.369 sobre acoso sexual, violencia y discriminación de género','Obliga a las instituciones a tener políticas, protocolos y unidades para prevenir y sancionar estas conductas.','Tienes derecho a un espacio seguro y a canales de denuncia en tu institución.'],
+   ['Normativa de gratuidad y beneficios','Reglas anuales de asignación de becas, créditos y gratuidad.','Determina a qué beneficios puedes acceder y cómo mantenerlos.'],
+   ['Sistema de Acceso a la Educación Superior','Regula la PAES, las ponderaciones y la postulación centralizada.','Define cómo postulas y cómo se calcula tu puntaje ponderado.'],
+   ['Ley N.º 19.628 y Ley N.º 21.719 de protección de datos personales','Regulan el uso de tus datos personales; la Ley 21.719 moderniza el régimen y crea una agencia de protección de datos, con entrada en vigencia diferida.','Esta app no pide RUT ni datos sensibles, y puedes borrar tus datos cuando quieras.']];
+  return `<h1>Antes de matricularte</h1><p class="small muted" style="margin:4px 0 12px">Verifica la institución y la carrera antes de firmar.</p>
+  <div class="card">${[['¿La institución tiene reconocimiento oficial del Estado?','Consulta en mifuturo.cl o en el Mineduc.'],['¿Está acreditada? ¿Cuántos años y en qué áreas?','Revisa en cnachile.cl. Más años = mejor evaluación.'],['Si es Medicina, Odontología o Pedagogía: ¿la carrera está acreditada?','Es obligatorio, y es requisito para algunos beneficios.'],['¿Está adscrita a gratuidad?','Si no lo está, no podrás usar gratuidad aunque cumplas los requisitos.'],['¿Cuánto costará en total, incluso si me atraso?','Usa la duración real, no solo la formal.'],['¿Qué dice el contrato sobre retiro y devolución de dinero?','Lee la política de retracto y devolución antes de pagar.'],['¿Tiene sanciones o fiscalizaciones de la Superintendencia?','Revisa sies.cl y el sitio de la Superintendencia de Educación Superior.']].map(([q,a],i)=>`<label class="check"><input type="checkbox" data-chk="pre${i}" ${S.checks['pre'+i]?'checked':''}><div><b class="small">${q}</b><div class="xs muted">${a}</div></div></label>`).join('')}</div>
+  <div class="disc">La <b>acreditación institucional</b> evalúa a toda la institución. La <b>acreditación de carrera</b> evalúa un programa específico. Una no reemplaza a la otra.</div>
+  <h2>Normativa explicada simple</h2>
+  ${leyes.map(([t,q,c])=>`<details><summary>📜 ${t}</summary><div class="in"><p><b>Qué es:</b> ${q}</p><p><b>Cómo te afecta:</b> ${c}</p></div></details>`).join('')}
+  ${adSlot('contenidos')}`;
+}
+
+/* ---- Mapa esquemático ---- */
+let MAPREG='';
+function vMapa(){
+  const cnt={}; C.forEach(c=>{const r=inst(c).reg; cnt[r]=(cnt[r]||0)+1;});
+  const h=520, step=h/REGIONES.length;
+  const svg=`<svg width="70" height="${h}" viewBox="0 0 70 ${h}" aria-label="Mapa esquemático de Chile"><defs><linearGradient id="g" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#2D5BFF"/><stop offset=".6" stop-color="#7B3FF2"/><stop offset="1" stop-color="#14C8B8"/></linearGradient></defs>
+   <path d="M30 4 C 34 80, 26 160, 32 240 C 36 320, 24 400, 30 470 C 34 500, 46 510, 52 516 L 40 516 C 22 500, 18 470, 20 440 C 22 380, 16 300, 22 230 C 26 150, 20 80, 22 4 Z" fill="url(#g)" opacity=".85"/>
+   ${REGIONES.map((r,i)=>cnt[r]?`<circle cx="${30+(i%2?6:-4)}" cy="${step*i+step/2}" r="${4+cnt[r]*1.4}" fill="#fff" stroke="#141B34" stroke-width="2" data-reg="${r}" style="cursor:pointer"/>`:'').join('')}</svg>`;
+  const L=MAPREG?C.filter(c=>inst(c).reg===MAPREG):[];
+  const sedes=MAPREG?Object.values(INST).filter(I=>I.reg===MAPREG):[];
+  return `<h1>Mapa de sedes</h1><p class="small muted" style="margin:4px 0 12px">Toca una región para ver instituciones y carreras.</p>
+  <div class="region-map">${svg}<div class="rlist">${REGIONES.map(r=>`<button class="rrow ${MAPREG===r?'on':''}" data-reg="${r}"><span>${r}</span><span class="chip ${cnt[r]?'b':''}">${cnt[r]||0}</span></button>`).join('')}</div></div>
+  <div class="disc">Mapa esquemático de la versión MVP. La búsqueda por cercanía con GPS (siempre opcional y con tu autorización) llegará en la app instalable.</div>
+  ${MAPREG?`<h2>${MAPREG}</h2>${sedes.map(I=>`<div class="card"><b>${I.n}</b><div class="small muted">${TIPO_INST[I.t]} · Sede ${I.com} · Acreditación ${I.acred} años (demo)</div></div>`).join('')}${L.map(card).join('')}${!L.length?'<div class="empty">Sin carreras demo en esta región. Revisa las carreras <b>online</b>.</div>':''}`:''}`;
+}
+
+/* ---- Alternativas ---- */
+function vAlternativas(){
+  const tec=C.filter(c=>c.tipo==='Técnica').sort((a,b)=>a.sem-b.sem);
+  return `<h1>Otros caminos</h1>
+  <h2>¿Y si no quiero ir a la universidad?</h2>
+  <div class="card small"><p>Las carreras técnicas de nivel superior duran 2 a 2,5 años, muchas no exigen PAES y tienen buena empleabilidad. Luego puedes <b>continuar estudios</b> (articulación) hacia una carrera profesional, a veces con convalidación de ramos.</p></div>
+  ${tec.map(card).join('')}
+  ${adSlot('orientacion')}
+  <h2>¿Qué pasa si no quedo seleccionado?</h2>
+  ${[['📋','Lista de espera','Revisa si quedaste en lista de espera: muchas personas avanzan cuando otros no se matriculan.'],['🔁','Postulaciones complementarias','Algunas instituciones abren cupos adicionales después de los resultados.'],['🚪','Admisión directa','IP, CFT y algunas universidades tienen admisión directa sin PAES.'],['🌟','Vías de ingreso especial','Programas PACE, cupos para deportistas, talentos, pueblos originarios o estudiantes con discapacidad (según cada institución).'],['🛠️','Partir por una carrera técnica','Te titulas antes, trabajas y luego continúas estudios.'],['📘','Preparar una nueva PAES','Puedes rendirla de nuevo y usar tu mejor puntaje, según las reglas del proceso vigente.']].map(([e,t,d])=>`<div class="card"><b>${e} ${t}</b><p class="small" style="margin-top:4px">${d}</p></div>`).join('')}`;
+}
+
+/* ---- Calendario ---- */
+function vCalendario(){
+  const hitos=['Inscripción PAES','Rendición PAES','Publicación de resultados PAES','Apertura de postulaciones','Cierre de postulaciones','Resultados de selección','Matrícula','Postulación a becas y gratuidad (FUAS)','Apelación de beneficios'];
+  return `<h1>Planificador de admisión</h1><p class="small muted" style="margin:4px 0 12px">Tu lista de tareas para el proceso de admisión.</p>
+  <div class="status info">📅 Las fechas oficiales se cargan cada año desde DEMRE y Mineduc. En esta versión aún no están cargadas: revísalas en <a href="https://demre.cl" target="_blank" rel="noopener">demre.cl</a> y <a href="https://portal.beneficiosestudiantiles.cl" target="_blank" rel="noopener">beneficiosestudiantiles.cl</a>.</div>
+  <div class="card" style="margin-top:12px">${hitos.map((h,i)=>`<label class="check"><input type="checkbox" data-chk="cal${i}" ${S.checks['cal'+i]?'checked':''}><div style="flex:1"><b class="small">${h}</b><div class="xs muted">Fecha: ${NA()}</div></div></label>`).join('')}</div>
+  <p class="xs muted">Los recordatorios automáticos estarán disponibles en la app instalable.</p>`;
+}
+
+/* ---- Publicidad (transparencia) ---- */
+function vPublicidad(){
+  return `<h1>Cómo funciona la publicidad</h1>
+  <div class="card small"><p><b>Elige tu futuro es gratis para estudiantes.</b> Se financia con publicidad no invasiva.</p><br>
+  <p>✓ Cada aviso está marcado como <b>PUBLICIDAD</b>.<br>✓ Los avisos <b>nunca</b> cambian el orden ni los resultados del buscador, el comparador o el ranking.<br>✓ Publicidad <b>no personalizada</b> por defecto, porque muchos usuarios son menores de edad.<br>✓ No vendemos datos personales.<br>✓ No aceptamos publicidad engañosa ni de instituciones sin reconocimiento oficial.</p></div>
+  <h2>Espacios publicitarios</h2>
+  ${Object.entries(ADS.slots).map(([k,s])=>`<div class="card small"><b>${s.ubicacion}</b><div class="muted">ID: ${k} · Formato: ${s.formato}</div></div>`).join('')}
+  <div class="card small"><b>Categorías de anunciantes admitidas</b><br>${ADS.categorias.join(' · ')}</div>
+  <div class="disc">${window.IS_NATIVE?'En la app Android los avisos se muestran como un banner de Google AdMob en la parte inferior, sin personalización y con contenido apto para adolescentes.':'Estado de integración: Google AdSense (web) <b>todavía no conectado</b>. Los avisos que ves son ejemplos para mostrar ubicación y formato.'}</div>`;
+}
+
+
+/* ---- Política de privacidad ---- */
+const PRIV_FECHA='23 de noviembre de 2026';
+function vPrivacidad(){
+  return `<h1>Política de privacidad</h1><p class="xs muted" style="margin:4px 0 12px">Última actualización: ${PRIV_FECHA}</p>
+  <div class="card small">${PRIVACY_HTML}</div>`;
+}
+const PRIVACY_HTML=`
+<p><b>Elige tu futuro</b> es una aplicación gratuita de orientación y búsqueda de educación superior en Chile. Esta política explica qué datos usa la aplicación y cómo los protege, conforme a la Ley N.º 19.628 sobre protección de la vida privada y a la Ley N.º 21.719, según su entrada en vigencia.</p><br>
+<p><b>1. Responsable.</b> Elige tu futuro (desarrollador independiente, Chile). Correo de contacto: miperrihijo.app@gmail.com.</p><br>
+<p><b>2. No pedimos registro.</b> No solicitamos nombre, RUT, correo, teléfono, dirección ni información económica identificable.</p><br>
+<p><b>3. Datos que guardas en tu dispositivo.</b> Tus favoritos, comparaciones, puntajes PAES que ingreses, preferencias y respuestas del test vocacional se guardan <b>solo en tu teléfono</b>. No se envían a nuestros servidores. Puedes borrarlos en "Mi perfil → Borrar todos mis datos" o desinstalando la app.</p><br>
+<p><b>4. Publicidad.</b> La app se financia con anuncios de Google AdMob. Para mostrar anuncios, Google puede recopilar el identificador de publicidad del dispositivo, la dirección IP y datos técnicos e interacciones con los anuncios. Solicitamos <b>anuncios no personalizados</b> y con contenido apto para adolescentes. Puedes restablecer o eliminar tu identificador de publicidad en la configuración de Android. Más información: https://policies.google.com/technologies/ads</p><br>
+<p><b>5. Ubicación.</b> La app no accede a tu ubicación.</p><br>
+<p><b>6. Venta de datos.</b> No vendemos ni compartimos tus datos personales con fines comerciales.</p><br>
+<p><b>7. Menores de edad.</b> La app está dirigida a personas desde los 13 años, especialmente estudiantes de enseñanza media. No recopilamos datos personales identificables de los usuarios.</p><br>
+<p><b>8. Fuentes de información.</b> La información de carreras proviene de fuentes públicas oficiales indicadas en cada ficha. La app no garantiza admisión, empleo ni beneficios.</p><br>
+<p><b>9. Tus derechos.</b> Puedes ejercer tus derechos de acceso, rectificación, supresión y oposición escribiendo a miperrihijo.app@gmail.com.</p><br>
+<p><b>10. Cambios.</b> Publicaremos cualquier cambio en esta página.</p>`;
+
+/* ---- Asistente (básico, basado en reglas) ---- */
+let CHAT=[{b:1,h:'¡Hola! Soy el asistente de Elige tu futuro. Respondo usando la base de datos de la app (en esta versión, datos de demostración). Pregúntame lo que quieras.'}];
+function vAsistente(){
+  const sug=['No sé qué estudiar','¿Qué puedo estudiar con 650 puntos?','¿Dónde estudiar Enfermería?','¿Cuánto cuesta Arquitectura?','¿Diferencia entre IP y universidad?','¿Puedo estudiar gratis?','No quiero rendir la PAES','¿Qué carrera tiene mejor empleabilidad?'];
+  return `<h1>Asistente</h1><p class="xs muted" style="margin:4px 0 12px">Versión básica sin inteligencia artificial: busca en los datos de la app y no inventa valores.</p>
+  <div class="chat" id="chat">${CHAT.map(m=>`<div class="msg ${m.b?'bot':'me'}">${m.h}</div>`).join('')}</div>
+  <div class="suggest">${sug.map(s=>`<button class="chip b" style="cursor:pointer" data-ask="${esc(s)}">${s}</button>`).join('')}</div>
+  <form class="chatbar" id="chatf"><input class="inp" id="chatq" placeholder="Escribe tu pregunta…" autocomplete="off"><button class="btn pri">Enviar</button></form>`;
+}
+function link(c){return `<a href="#" data-open="${c.id}">${esc(c.n)} – ${inst(c).n}</a>`;}
+function responder(q){
+  const n=norm(q);
+  const num=(n.match(/\b(\d{3})\b/)||[])[1];
+  const carrera=C.find(c=>n.includes(norm(c.n).split(' ')[0])&&norm(c.n).split(' ')[0].length>4);
+  const regionM=REGIONES.find(r=>n.includes(norm(r)))||(n.includes('santiago')?'Metropolitana':null);
+  if(/no se que estudiar|por donde empiezo|no se que/.test(n)) return `Buen punto de partida: <ul><li><a href="#test">Haz el test vocacional</a> (3 minutos).</li><li>Revisa tus resultados y guarda carreras en favoritos.</li><li>Usa <a href="#ranking">Mi ranking personal</a> con tu presupuesto y región.</li></ul>`;
+  if(num&&/punto|puntaje|alcanza/.test(n)){
+    const x=+num; const L=C.filter(c=>c.pond&&c.corte!=null&&x>=c.corte-30&&x>=c.min).sort((a,b)=>b.corte-a.corte);
+    return `Comparando ${x} puntos ponderados con los cortes del año anterior (datos demo), estas carreras quedarían alcanzables o competitivas:<ul>${L.map(c=>`<li>${link(c)} (corte ${c.corte})</li>`).join('')||'<li>Ninguna con PAES; revisa admisión directa.</li>'}</ul>Además hay ${C.filter(c=>!c.pond).length} carreras con admisión directa. Para un cálculo exacto con ponderaciones, ingresa tus puntajes en <a href="#perfil">Mi perfil</a>.<div class="xs muted">${DISC_ADM}</div>`;
+  }
+  if(/diferencia|ip y|cft|instituto/.test(n)&&/universidad|ip|cft/.test(n)) return `<ul><li><b>Universidad:</b> entrega grados académicos (licenciatura, magíster) y títulos profesionales. Carreras de 8 a 14 semestres.</li><li><b>Instituto Profesional (IP):</b> entrega títulos profesionales sin licenciatura y títulos técnicos.</li><li><b>CFT:</b> entrega títulos técnicos de nivel superior, de 4 a 5 semestres.</li></ul>Algunas profesiones (como Medicina, Derecho o Psicología) solo pueden estudiarse en universidades.`;
+  if(/gratis|gratuidad/.test(n)) return `Sí, si tu hogar está en el tramo de menores ingresos exigido (referencia: 60%) y estudias en una institución adscrita. En esta versión hay ${C.filter(c=>inst(c).gratuidad).length} carreras demo en instituciones con gratuidad. Prueba el <a href="#financiamiento">simulador de beneficios</a> y postula con el FUAS en beneficiosestudiantiles.cl.`;
+  if(/paes/.test(n)&&/no quiero|sin/.test(n)) return `Puedes estudiar sin PAES en carreras con admisión directa:<ul>${C.filter(c=>!c.pond).slice(0,6).map(c=>`<li>${link(c)}</li>`).join('')}</ul>Revisa más en <a href="#alternativas">Otros caminos</a>.`;
+  if(/no me alcanza|no quede|no quedo/.test(n)) return `Tienes varias opciones: lista de espera, admisión directa, vías especiales, partir por una carrera técnica o preparar una nueva PAES. Te lo explico en <a href="#alternativas">Otros caminos</a>.`;
+  if(/tecnica primero|conviene.*tecnica/.test(n)) return `Puede convenir si quieres trabajar pronto o no estás seguro/a: te titulas en 2–2,5 años y luego puedes continuar estudios con articulación. Revisa <a href="#alternativas">carreras técnicas</a>.`;
+  if(/empleabilidad|perspectiva|mejor pagad|laboral/.test(n)){const L=[...C].filter(c=>c.emp1!=null).sort((a,b)=>b.emp1-a.emp1).slice(0,5); if(!L.length) return 'La base cargada no incluye datos de empleabilidad. Se incorporarán desde MiFuturo.cl.'; return `Mayor empleabilidad al primer año (datos demo):<ul>${L.map(c=>`<li>${link(c)}: ${c.emp1}%</li>`).join('')}</ul><div class="xs muted">Son indicadores estadísticos, no garantías.</div>`;}
+  if(/biologia|matematica|me gusta/.test(n)){const a=[]; if(/biolog/.test(n)) a.push('salud','cien'); if(/matemat/.test(n)) a.push('tec','neg'); if(/arte|dibuj/.test(n)) a.push('arte'); if(/historia|lenguaje/.test(n)) a.push('soc','der'); const L=C.filter(c=>a.includes(c.a)).slice(0,8); if(L.length) return `Con esos intereses podrías explorar:<ul>${L.map(c=>`<li>${link(c)}</li>`).join('')}</ul>El <a href="#test">test vocacional</a> te dará una orientación más completa.`;}
+  if(carrera){
+    const L=C.filter(c=>norm(c.n).split(' ')[0]===norm(carrera.n).split(' ')[0]&&(!regionM||inst(c).reg===regionM));
+    if(/cuanto|cuesta|arancel|precio|vale/.test(n)) return `Costos de ${carrera.n} (datos demo):<ul>${L.map(c=>`<li>${link(c)}: arancel ${clp(c.arancel)} anual · costo total ${clp(costoTotal(c))}</li>`).join('')}</ul>`;
+    return L.length?`Puedes estudiar ${carrera.n}${regionM?' en la Región '+regionM:''} en:<ul>${L.map(c=>`<li>${link(c)} · ${inst(c).com}</li>`).join('')}</ul>`:`No encontré ${carrera.n} en esa región en los datos actuales. <a href="#explorar">Busca en todas las regiones</a>.`;
+  }
+  return `No tengo una respuesta confiable para eso en los datos de la app, y prefiero no inventar. Prueba con <a href="#explorar">el buscador</a> o reformula tu pregunta (ej.: "¿Dónde estudiar Psicología?").`;
+}
+
+/* ================= BASE OFICIAL (INDICES CNED / SIES) ================= */
+let DATA_MODE='demo', DATA_INFO=null; const DEMO_C=C.slice(), DEMO_INST=Object.assign({},INST);
+const AREA_MAP=[['salud','salud'],['tecnolog','tec'],['social','soc'],['ffaa','ffaa'],['seguridad','ffaa'],['agricultura','agro'],['ciencias basicas','cien'],['ciencia','cien'],['educacion','edu'],['humanidad','soc'],['arte','arte'],['arquitect','arte'],['administracion','neg'],['comercio','neg'],['derecho','der'],['agro','agro'],['agropecuar','agro']];
+function areaKey(s){const n=norm(s||''); for(const [k,a] of AREA_MAP) if(n.includes(k)) return a; return 'serv';}
+function pick(row,names){for(const k of Object.keys(row)){const nk=norm(k).replace(/[^a-z0-9]/g,''); if(names.some(x=>nk===x||nk.startsWith(x))) return row[k];} return null;}
+const num=x=>{if(x==null||x==='')return null; const n=+String(x).replace(/[^\d.-]/g,''); return isFinite(n)&&n>0?n:null;};
+function mapRows(rows){
+  const inst={}, out=[]; let id=1;
+  for(const r of rows){
+    const nom=pick(r,['nombreprograma','nombrecarrera','carrera']); const in_=pick(r,['nombreinstitucion','institucion']); if(!nom||!in_) continue;
+    const nivel=String(pick(r,['pregradoposgrado','nivel'])||'pregrado'); if(/posgrado|postgrado/i.test(nivel)) continue;
+    const ti=norm(pick(r,['tipoinstitucion'])||''); const t=ti.includes('universidad')?'U':ti.includes('instituto')?'IP':ti.includes('formacion')||ti.includes('cft')?'CFT':'U';
+    const com=pick(r,['comuna'])||pick(r,['nombredelasede','sede'])||''; const reg=String(pick(r,['nombreregion','region'])||'').replace(/^Regi[oó]n (de |del |de la )?/i,'').trim();
+    const key=norm(in_)+'|'+norm(com);
+    if(!inst[key]) inst[key]={n:in_,t,reg:reg||'Información no disponible',com:com||'',acred:null,acredAreas:null,gratuidad:null,autonoma:null,residencias:false,vida:[]};
+    const moneda=norm(pick(r,['tipodemoneda','moneda'])||'pesos'); const uf=moneda.includes('uf');
+    const titulo=pick(r,['titulo'])||''; const grado=pick(r,['gradoacademico'])||null;
+    const tipo = t==='CFT'||/tecnic/i.test(titulo) ? 'Técnica':'Profesional';
+    const hor=String(pick(r,['horario','jornada'])||''); const jor=/vesp/i.test(hor)?'Vespertina':/diur/i.test(hor)?'Diurna':(hor||'Otra');
+    const ment=pick(r,['mencionoespecialidad','mencion']);
+    out.push({id:id++,n:String(nom).trim()+(ment&&norm(ment)!=='sin mencion'&&norm(ment)!=='no aplica'?' – '+ment:''),i:key,a:areaKey(pick(r,['areaconocimiento','area'])),generica:pick(r,['carreragenerica']),tipo,grado:grado&&!/sin grado|no aplica/i.test(grado)?grado:null,titulo:titulo||'Información no disponible',mod:null,jor,sem:num(pick(r,['duracionensemestres','duracion'])),real:null,
+      arancel:uf?null:num(pick(r,['valordearancel','arancel'])),mat:uf?null:num(pick(r,['valordematricula','matricula'])),valTitulo:uf?null:num(pick(r,['valordeltitulo'])),uf,
+      pond:null,admND:true,min:null,corte:null,cupos:num(pick(r,['vacantes'])),emp1:null,emp2:null,ing:null,acredCarrera:null,malla:null,practicas:null,perfil:null,sect:[],cont:null,sies:pick(r,['codigosies'])});
+  }
+  return {inst,out};
+}
+function loadOfficial(payload){
+  const {inst,out,info}=payload;
+  for(const k in INST) delete INST[k]; Object.assign(INST,inst);
+  const meta={fuente:info.fuente,fecha:info.fecha,anio:info.anio,verif:'Fuente oficial',url:info.url};
+  out.forEach(c=>{c.meta=meta; c.sect=c.sect||[]; c.admND=true;});
+  for(const k in INST){ INST[k].vida=INST[k].vida||[]; if(info.fuenteGratuidad) INST[k].gratuidad=!!INST[k].gratuidad; }
+  C.length=0; C.push(...out); DATA_MODE='oficial'; DATA_INFO=info;
+  S.favs=S.favs.filter(id=>C.some(c=>c.id===id)); S.comp=[]; save();
+  const regs=[...new Set(Object.values(INST).map(i=>i.reg))]; regs.forEach(r=>{if(!REGIONES.includes(r)&&r!=='Información no disponible') REGIONES.push(r);});
+}
+function restoreDemo(){for(const k in INST) delete INST[k]; Object.assign(INST,DEMO_INST); C.length=0; C.push(...DEMO_C); DATA_MODE='demo'; DATA_INFO=null; S.comp=[]; save(); idbDel();}
+/* IndexedDB para conservar una base importada en este navegador */
+function idb(){return new Promise((res,rej)=>{try{const q=indexedDB.open('etf',1);q.onupgradeneeded=()=>q.result.createObjectStore('d');q.onsuccess=()=>res(q.result);q.onerror=rej;}catch(e){rej(e)}});}
+async function idbPut(v){try{const db=await idb();db.transaction('d','readwrite').objectStore('d').put(v,'oferta');}catch(e){}}
+async function idbGet(){try{const db=await idb();return await new Promise(r=>{const q=db.transaction('d').objectStore('d').get('oferta');q.onsuccess=()=>r(q.result);q.onerror=()=>r(null);});}catch(e){return null}}
+async function idbDel(){try{const db=await idb();db.transaction('d','readwrite').objectStore('d').delete('oferta');}catch(e){}}
+function loadXLSX(){return new Promise((res,rej)=>{if(window.XLSX) return res(); const s=document.createElement('script'); s.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js'; s.onload=res; s.onerror=rej; document.head.appendChild(s);});}
+async function importFile(file){
+  const out=$('#imp-out'); out.innerHTML='<div class="status info">⏳ Leyendo la planilla…</div>';
+  try{
+    await loadXLSX(); const buf=await file.arrayBuffer(); const wb=XLSX.read(buf,{type:'array'});
+    let best=null; for(const n of wb.SheetNames){const rows=XLSX.utils.sheet_to_json(wb.Sheets[n],{defval:null}); if(!best||rows.length>best.length) best=rows;}
+    // Algunas planillas oficiales traen filas de título antes del encabezado: buscar la fila que contiene "Nombre Institución"
+    if(best && !Object.keys(best[0]||{}).some(k=>/instituci/i.test(k))){
+      const sh=wb.Sheets[wb.SheetNames.find(n=>XLSX.utils.sheet_to_json(wb.Sheets[n]).length===best.length)]; const raw=XLSX.utils.sheet_to_json(sh,{header:1,defval:null});
+      const hi=raw.findIndex(r=>r.some(c=>/nombre instituci/i.test(String(c||'')))); if(hi>=0){const hd=raw[hi]; best=raw.slice(hi+1).map(r=>Object.fromEntries(hd.map((h,i)=>[h||('c'+i),r[i]])));}
+    }
+    const {inst,out:rows}=mapRows(best||[]);
+    if(!rows.length){out.innerHTML='<div class="status bad">No reconocí columnas de oferta académica (se esperan, por ejemplo, "Nombre Institución" y "Nombre Programa").</div>';return;}
+    const info={fuente:$('#imp-src').value||'Planilla oficial importada',fecha:new Date().toISOString().slice(0,10),anio:+($('#imp-anio').value||new Date().getFullYear()),url:null,archivo:file.name};
+    const payload={inst,out:rows,info}; loadOfficial(payload); idbPut(payload);
+    out.innerHTML=`<div class="status ok">✓ ${rows.length.toLocaleString('es-CL')} programas de ${new Set(Object.values(inst).map(i=>i.n)).size} instituciones cargados.</div>`;
+    setTimeout(()=>go('explorar'),900);
+  }catch(e){out.innerHTML='<div class="status bad">No pude leer el archivo. Verifica que sea .xlsx o .csv.</div>';}
+}
+function vDatos(){
+  const ni=new Set(Object.values(INST).map(i=>i.n)).size;
+  const byT=t=>new Set(Object.values(INST).filter(i=>i.t===t).map(i=>i.n)).size;
+  return `<h1>Base de datos</h1>
+  <div class="bigstat ${DATA_MODE==='oficial'?'ok':'mid'} fx" style="margin-top:10px"><span class="e">${DATA_MODE==='oficial'?'✅':'🧪'}</span><div>${DATA_MODE==='oficial'?'Usando base oficial':'Usando datos de demostración'}<div class="xs" style="font-weight:500">${DATA_MODE==='oficial'?`${DATA_INFO.fuente} · cargada ${DATA_INFO.fecha}`:'Carreras e instituciones ficticias'}</div></div></div>
+  <div class="rings">${ring(1,'#2D5BFF',`<span data-count="${C.length}">0</span>`,'Programas')}${ring(1,'#7B3FF2',`<span data-count="${ni}">0</span>`,'Instituciones')}${ring(1,'#14C8B8',`<span data-count="${new Set(Object.values(INST).map(i=>i.reg)).size}">0</span>`,'Regiones')}</div>
+  <div class="mcard fx" style="margin-top:12px"><h3>Por tipo de institución</h3>${[['U','Universidades','#2D5BFF'],['IP','Institutos Profesionales','#7B3FF2'],['CFT','Centros de Formación Técnica','#14C8B8']].map(([t,n,col])=>`<div class="hrow"><span class="nm">${n}</span><div class="hb"><i data-w="${byT(t)/Math.max(1,ni)*100}%" style="background:${col}"></i></div><span class="vl">${byT(t)}</span></div>`).join('')}</div>
+  ${window.IS_NATIVE?'':`<div class="mcard"><h3>📥 Cargar base oficial</h3>
+   <p class="small" style="margin:6px 0 10px">Sube la planilla de oferta académica de pregrado (INDICES del CNED o Buscador de Carreras de MiFuturo/SIES). La app reconoce las columnas automáticamente.</p>
+   <label class="xs muted" style="font-weight:700">Fuente (se mostrará en cada ficha)</label><input class="inp" id="imp-src" value="INDICES Educación Superior, Consejo Nacional de Educación — Oferta pregrado 2026">
+   <label class="xs muted" style="font-weight:700;display:block;margin-top:8px">Año académico</label><input class="inp" id="imp-anio" type="number" value="2026">
+   <input type="file" id="imp-file" accept=".xlsx,.xls,.csv" style="margin-top:12px">
+   <div id="imp-out" style="margin-top:10px"></div>
+   ${DATA_MODE==='oficial'?'<button class="btn ghost sm" style="margin-top:10px" data-demo>Volver a datos de demostración</button>':''}</div>`}
+  ${DATA_MODE==='oficial'?`<div class="mcard"><h3>Fuentes</h3><p class="small" style="margin-top:6px">• Carreras: ${DATA_INFO.fuente}${DATA_INFO.url?` (<a href="${DATA_INFO.url}" target="_blank" rel="noopener">cned.cl</a>)`:''}<br>${DATA_INFO.fuenteAcred?'• Acreditación: '+DATA_INFO.fuenteAcred+'<br>':''}${DATA_INFO.fuenteGratuidad?`• Gratuidad: ${DATA_INFO.fuenteGratuidad}`:''}</p></div>`:''}
+  <div class="disc">La base oficial trae: institución, sede, región, carrera, jornada, duración, título, grado, arancel, matrícula, costo de titulación y vacantes. <b>No trae</b> ponderaciones PAES, puntajes de corte, empleabilidad ni modalidad: esos datos se mostrarán como "Información no disponible" hasta cargarlos desde DEMRE, MiFuturo y CNA.</div>`;
+}
+
+/* ---------- Eventos ---------- */
+function afterRender(view){ animate(document.getElementById('app')); }
+function animate(root){
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    root.querySelectorAll('[data-w]').forEach(el=>el.style.width=el.dataset.w);
+    root.querySelectorAll('[data-ring]').forEach(el=>el.style.strokeDashoffset=el.dataset.ring);
+    root.querySelectorAll('[data-left]').forEach(el=>el.style.left=el.dataset.left);
+    root.querySelectorAll('.dots').forEach(el=>el.classList.add('go'));
+    root.querySelectorAll('[data-count]').forEach(el=>{const to=+el.dataset.count,f=el.dataset.fmt,t0=performance.now(),D=900;
+      const fmt=x=>f==='mm'?mm(x):f==='pct'?Math.round(x)+'%':Math.round(x);
+      (function step(t){const k=Math.min(1,(t-t0)/D),e=1-Math.pow(1-k,3);el.textContent=fmt(to*e);if(k<1)requestAnimationFrame(step);})(t0);});
+  }));
+}
+document.addEventListener('click',e=>{
+  const t=e.target.closest('[data-go],[data-open],[data-fav],[data-cmp],[data-close],[data-f],[data-falc],[data-toggle-filters],[data-clear],[data-ans],[data-back],[data-retest],[data-lastres],[data-usetest],[data-saveperfil],[data-wipe],[data-sim],[data-reg],[data-ask],[data-share],[data-clearcmp],[data-favcmp],[data-tab],[data-area],[data-tools],[data-more],[data-demo]');
+  if(!t) return;
+  const d=t.dataset;
+  if(d.fav){e.stopPropagation(); const id=+d.fav; S.favs=S.favs.includes(id)?S.favs.filter(x=>x!==id):[...S.favs,id]; save(); toast(S.favs.includes(id)?'Guardada en favoritos':'Quitada de favoritos'); refresh(id); return;}
+  if(d.cmp){e.stopPropagation(); const id=+d.cmp; if(S.comp.includes(id)) S.comp=S.comp.filter(x=>x!==id); else { if(S.comp.length>=4){toast('Máximo 4 carreras para comparar');return;} S.comp.push(id);} save(); toast(S.comp.includes(id)?'Agregada al comparador':'Quitada del comparador'); refresh(id); return;}
+  if(d.close!==undefined){ if(t.classList.contains('sheet-bg')&&e.target!==t) return; closeSheet(); if(t.tagName==='A') return; return;}
+  if(d.open){e.preventDefault(); ficha(+d.open); return;}
+  if(d.tab){FTAB=d.tab; ficha(FID); const tb=document.querySelector('.tabs'); if(tb) tb.scrollIntoView({block:'nearest'}); return;}
+  if(d.area){const k=d.area; if(cur()==='explorar'){F.areas=F.areas.includes(k)?F.areas.filter(x=>x!==k):[...F.areas,k];} else {F.areas=[k];} closeSheet(); go('explorar'); return;}
+  if(d.tools!==undefined){toolsSheet(); return;}
+  if(d.more!==undefined){const y=window.scrollY; LIM+=30; render(); window.scrollTo(0,y); return;}
+  if(d.demo!==undefined){restoreDemo(); toast('Volviste a los datos de demostración'); render(); return;}
+  if(d.go){closeSheet(); go(d.go); return;}
+  if(d.toggleFilters!==undefined){filtersSheet(); return;}
+  if(d.f){LIM=30; const g=d.f; F[g]=F[g].includes(d.v)?F[g].filter(x=>x!==d.v):[...F[g],d.v]; render(); if(SHEET==='filters') filtersSheet(); return;}
+  if(d.falc!==undefined){F.alcance=!F.alcance; render(); return;}
+  if(d.clear!==undefined){F={q:'',areas:[],tipoInst:[],tipo:[],costo:[],reg:'',mod:[],jor:[],alcance:false,orden:'rel',open:false}; render(); return;}
+  if(d.ans!==undefined){const o=TEST[T.i].o[+d.ans]; T.hist=T.hist||[]; T.hist.push(o[2]); for(const k in o[2]) T.sc[k]=(T.sc[k]||0)+o[2][k]; T.i++; if(T.i>=TEST.length){const dur=['_corta','_media','_larga'].find(k=>T.sc[k])||'_media'; S.test={sc:T.sc,dur,fecha:new Date().toISOString()}; save(); T.view='res';} render(); return;}
+  if(d.back!==undefined){const last=T.hist.pop(); for(const k in last) T.sc[k]-=last[k]; T.i--; render(); return;}
+  if(d.retest!==undefined){T={i:0,sc:{}}; render(); return;}
+  if(d.lastres!==undefined){T={i:TEST.length,sc:S.test.sc}; render(); return;}
+  if(d.usetest!==undefined){go('ranking'); return;}
+  if(d.saveperfil!==undefined){document.querySelectorAll('[data-p]').forEach(i=>S.perfil[i.dataset.p]=i.value); const bad=['nem','rank','cl','m1'].some(k=>!S.perfil[k]); save(); if(bad) toast('Completa al menos NEM, Ranking, Competencia Lectora y M1'); render(); return;}
+  if(d.wipe!==undefined){S={favs:[],comp:[],perfil:{nem:'',rank:'',cl:'',m1:'',m2:'',cien:'',hist:'',region:'',presupuesto:'',modalidad:'',areas:[]},test:null,checks:{}}; try{localStorage.removeItem(LS);}catch(e){} T={i:0,sc:{}}; toast('Tus datos fueron borrados'); render(); return;}
+  if(d.sim!==undefined){simular(); return;}
+  if(d.reg){MAPREG=MAPREG===d.reg?'':d.reg; render(); return;}
+  if(d.ask){ask(d.ask); return;}
+  if(d.share!==undefined){const txt=shareText(); if(window.NativeBridge&&NativeBridge.share){NativeBridge.share(txt).catch(()=>{}); return;} try{navigator.clipboard.writeText(txt).then(()=>toast('Resumen copiado. Pégalo en WhatsApp o correo.'),()=>showText(txt));}catch(err){showText(txt);} return;}
+  if(d.clearcmp!==undefined){S.comp=[]; save(); render(); return;}
+  if(d.favcmp!==undefined){S.comp=S.favs.slice(0,4); save(); go('comparar'); return;}
+});
+function showText(txt){$('#sheet-root').innerHTML=`<div class="sheet-bg" data-close><div class="sheet" style="padding:16px"><h3>Copia este resumen</h3><textarea class="inp" rows="8" style="margin-top:8px">${esc(txt)}</textarea><button class="btn pri" style="margin-top:8px" data-close>Cerrar</button></div></div>`;}
+function refresh(id){ const open=SHEET==='ficha'; render(); if(open) ficha(FID||id); }
+function ask(q){ CHAT.push({b:0,h:esc(q)}); CHAT.push({b:1,h:responder(q)}); render(); const ch=$('#chat'); if(ch) ch.lastElementChild.scrollIntoView({block:'end'}); }
+document.addEventListener('submit',e=>{
+  e.preventDefault();
+  if(e.target.id==='home-search'){F.q=$('#hq').value; go('explorar');}
+  if(e.target.id==='ex-search'){LIM=30; F.q=$('#exq').value; render();}
+  if(e.target.id==='chatf'){const q=$('#chatq').value.trim(); if(q) ask(q);}
+});
+document.addEventListener('change',e=>{
+  const t=e.target;
+  if(t.id==='freg'){F.reg=t.value; render(); if(SHEET==='filters') filtersSheet();}
+  if(t.id==='forden'){F.orden=t.value; render(); if(SHEET==='filters') filtersSheet();}
+  if(t.dataset.pref){S.perfil[t.dataset.pref]=t.value; save();}
+  if(t.dataset.chk){S.checks[t.dataset.chk]=t.checked; save();}
+  if(t.id==='imp-file'&&t.files[0]) importFile(t.files[0]);
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape') closeSheet();});
+render();
+(async()=>{
+  try{const r=await fetch('oferta.json',{cache:'no-cache'}); if(r.ok){const p=await r.json(); if(p&&p.out&&p.out.length){loadOfficial(p); render(); return;}}}catch(e){}
+  const p=await idbGet(); if(p&&p.out&&p.out.length){loadOfficial(p); render();}
+})();
+</script>
+</body>
+</html>
