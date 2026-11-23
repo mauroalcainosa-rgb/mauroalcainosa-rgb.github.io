@@ -18,7 +18,6 @@ jobs:
         with:
           distribution: temurin
           java-version: "17"
-      - uses: android-actions/setup-android@v3
       - name: Compilar AAB (sin firmar; se firma con la llave de subida fuera de CI)
         run: |
           chmod +x gradlew
