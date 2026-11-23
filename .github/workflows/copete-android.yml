@@ -1,0 +1,30 @@
+name: Compilar app Android
+
+on:
+  push:
+    branches: [main]
+    paths: ["copete-club-android/**", ".github/workflows/copete-android.yml"]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: copete-club-android
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: android-actions/setup-android@v3
+      - name: Compilar AAB (sin firmar; se firma con la llave de subida fuera de CI)
+        run: |
+          chmod +x gradlew
+          ./gradlew --no-daemon bundleRelease
+      - uses: actions/upload-artifact@v4
+        with:
+          name: copete-club-release
+          path: |
+            copete-club-android/app/build/outputs/bundle/release/*.aab

@@ -13,6 +13,8 @@ const store = {
 const CLP = (n) => new Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP", maximumFractionDigits: 0 }).format(n);
 const fmtDate = (d) => new Intl.DateTimeFormat("es-CL", { day: "numeric", month: "long", year: "numeric" }).format(d);
 
+// Versión app (Android / Google Play): sin compras dentro de la app.
+const APP = (() => { try { if (new URLSearchParams(location.search).get("src") === "twa" || document.referrer.startsWith("android-app://")) sessionStorage.setItem("cc-app", "1"); return sessionStorage.getItem("cc-app") === "1"; } catch { return false; } })();
 let DATA, WORLD;
 const S = {
   country: store.get("country", "CL"),
@@ -207,9 +209,9 @@ function viewHome() {
   <section class="flex flex-col gap-5"><p class="font-display text-[clamp(2rem,6vw,3.4rem)] font-extrabold uppercase leading-[.9]">The world is your bar.</p>
     <form data-home-search class="relative max-w-2xl" role="search"><label for="hq" class="sr-only">Buscar recetas</label><span class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted">${ic(I.search)}</span>
     <input id="hq" name="q" placeholder="Busca por nombre, país o ingrediente: negroni, Perú, pisco…" class="field !rounded-full !py-3.5 !pl-12"></form>
-    <div class="flex flex-wrap gap-2">${[["#explore", "Buscar", I.search], ["#my-bar", "Favoritos", I.heart], [`#c-${t.slug}`, "Cóctel del día", I.clock], ["#suscripcion", "Mi suscripción", I.card]].map(([h, l, i]) => `<a href="${h}" class="btn-ghost !py-2 !text-sm">${ic(i, "h-4 w-4")}${l}</a>`).join("")}</div></section>
-  <section class="surface flex flex-col gap-4 border-gold/30 p-6 sm:flex-row sm:items-center sm:justify-between"><div><p class="font-display text-3xl font-bold uppercase text-gold">7 días gratis</p>
-    <p class="text-muted">Historias completas, recetas, Local Twist y el bartender con IA. Luego ${CLP(2990)} al mes; cancelas cuando quieras.</p></div><a href="#suscripcion" class="btn-neon shrink-0">Comenzar mi experiencia gratuita</a></section>
+    <div class="flex flex-wrap gap-2">${[["#explore", "Buscar", I.search], ["#my-bar", "Favoritos", I.heart], [`#c-${t.slug}`, "Cóctel del día", I.clock], ...(APP ? [] : [["#suscripcion", "Mi suscripción", I.card]])].map(([h, l, i]) => `<a href="${h}" class="btn-ghost !py-2 !text-sm">${ic(i, "h-4 w-4")}${l}</a>`).join("")}</div></section>
+  ${APP ? "" : `  <section class="surface flex flex-col gap-4 border-gold/30 p-6 sm:flex-row sm:items-center sm:justify-between"><div><p class="font-display text-3xl font-bold uppercase text-gold">7 días gratis</p>
+    <p class="text-muted">Historias completas, recetas, Local Twist y el bartender con IA. Luego ${CLP(2990)} al mes; cancelas cuando quieras.</p></div><a href="#suscripcion" class="btn-neon shrink-0">Comenzar mi experiencia gratuita</a></section>`}
   ${shelf("Populares en el club", popular, "#explore")}
   ${shelf(`Para ti en ${esc(me?.name ?? "tu país")}`, recs(), null, S.fav.size ? "Según tus favoritos" : "Según tu país")}
   <section class="flex flex-col gap-4"><div class="flex items-baseline justify-between"><h2 class="font-display text-4xl font-bold uppercase">Explora por países</h2><a href="#world-tour" class="font-ui text-sm text-turq hover:underline">Abrir el mapa</a></div>
@@ -505,10 +507,10 @@ function viewProfile() {
   return `<div class="flex max-w-3xl flex-col gap-10"><header><h1 class="font-display text-[clamp(3rem,10vw,5.5rem)] font-extrabold uppercase leading-[.85]">Profile</h1></header>
   <section class="flex flex-col gap-4"><h2 class="font-display text-3xl font-bold uppercase">Tu país</h2>${countrySelect("País para recetas y Local Twist", "profile-country")}
   <p class="font-ui text-sm text-faint">No usamos tu ubicación precisa: solo el país que eliges.</p></section>
-  <section class="flex flex-col gap-3"><h2 class="font-display text-3xl font-bold uppercase">Membresía</h2><p>Versión de revisión con acceso completo.</p><a href="#suscripcion" class="btn-ghost self-start">Mi suscripción</a></section>
+  ${APP ? "" : `<section class="flex flex-col gap-3"><h2 class="font-display text-3xl font-bold uppercase">Membresía</h2><p>Versión de revisión con acceso completo.</p><a href="#suscripcion" class="btn-ghost self-start">Mi suscripción</a></section>`}
   <section class="flex flex-col gap-4"><h2 class="font-display text-3xl font-bold uppercase">Accesibilidad</h2><label class="flex items-center justify-between gap-4"><span>Reducir animaciones<span class="block font-ui text-sm text-muted">También respetamos la preferencia de tu sistema.</span></span>
   <button data-motion role="switch" aria-checked="${reduced}" class="relative h-7 w-12 shrink-0 rounded-full border border-white/20 ${reduced ? "bg-turq/60" : "bg-smoke"}"><span class="absolute top-0.5 h-5 w-5 rounded-full bg-white ${reduced ? "left-6" : "left-0.5"}"></span></button></label></section>
-  <section class="flex flex-col items-start gap-3 border-t border-white/[.07] pt-6"><button data-reset class="font-ui text-sm text-faint underline hover:text-danger">Borrar mis datos de esta revisión</button></section></div>`;
+  <section class="flex flex-col items-start gap-3 border-t border-white/[.07] pt-6"><a href="privacidad.html" class="font-ui text-sm text-muted underline hover:text-white">Política de privacidad</a><button data-reset class="font-ui text-sm text-faint underline hover:text-danger">Borrar mis datos de este dispositivo</button><p class="font-ui text-sm text-faint">Copete Club es para mayores de 18 años. Disfruta con moderación.</p></section></div>`;
 }
 const viewNotFound = () => `<div class="flex flex-col items-start gap-4 py-16"><p class="neon-sign text-[clamp(4rem,14vw,9rem)]" style="--neon:#ff2ba6">404</p><p class="text-xl">Esta barra está cerrada. La página que buscas no existe.</p><a href="#explore" class="btn-neon">Volver a explorar</a></div>`;
 
@@ -629,7 +631,7 @@ const NAV = [["inicio", "Home", I.home], ["explore", "Explore", I.search], ["wor
 function navActive(r) { return r.startsWith("c-") ? "explore" : r.startsWith("pais-") ? "world-tour" : r === "suscripcion" ? "profile" : r; }
 function renderNav(r) {
   const a = navActive(r);
-  $("#side").innerHTML = `<a href="#inicio" class="mb-10 block">${wordmark()}</a><ul class="flex flex-col gap-1">${NAV.map(([h, l, i]) => `<li><a href="#${h}" ${a === h ? 'aria-current="page"' : ""} class="flex items-center gap-3 rounded-lg px-3 py-2.5 font-ui text-[1.02rem] font-semibold uppercase tracking-[.08em] transition-colors ${a === h ? "bg-violet/15 text-white shadow-[inset_2px_0_0_#8b3dff]" : "text-muted hover:text-white"}"><span class="${a === h ? "text-violet-soft" : ""}">${ic(i)}</span>${l}</a></li>`).join("")}</ul><div class="mt-auto font-ui text-sm text-muted"><a href="#suscripcion" class="hover:text-white">Mi suscripción</a></div>`;
+  $("#side").innerHTML = `<a href="#inicio" class="mb-10 block">${wordmark()}</a><ul class="flex flex-col gap-1">${NAV.map(([h, l, i]) => `<li><a href="#${h}" ${a === h ? 'aria-current="page"' : ""} class="flex items-center gap-3 rounded-lg px-3 py-2.5 font-ui text-[1.02rem] font-semibold uppercase tracking-[.08em] transition-colors ${a === h ? "bg-violet/15 text-white shadow-[inset_2px_0_0_#8b3dff]" : "text-muted hover:text-white"}"><span class="${a === h ? "text-violet-soft" : ""}">${ic(i)}</span>${l}</a></li>`).join("")}</ul><div class="mt-auto font-ui text-sm text-muted">${APP ? `<a href="privacidad.html" class="hover:text-white">Privacidad</a>` : `<a href="#suscripcion" class="hover:text-white">Mi suscripción</a>`}</div>`;
   $("#top").innerHTML = `<a href="#inicio">${wordmark()}</a><div class="flex items-center gap-1"><a href="#mocktails" aria-label="Mocktails" class="rounded-full p-2.5 ${a === "mocktails" ? "text-turq" : "text-muted"}">${ic(I.leaf)}</a><a href="#profile" aria-label="Perfil" class="rounded-full p-2.5 ${a === "profile" ? "text-violet-soft" : "text-muted"}">${ic(I.user)}</a></div>`;
   $("#bottom").innerHTML = `<ul class="grid grid-cols-5">${NAV.slice(0, 5).map(([h, l, i]) => `<li><a href="#${h}" ${a === h ? 'aria-current="page"' : ""} class="flex flex-col items-center gap-1 py-2.5 font-ui text-[.68rem] font-semibold uppercase tracking-[.06em] ${a === h ? "text-white" : "text-faint"}"><span class="${a === h ? "text-fuchsia drop-shadow-[0_0_6px_#ff2ba6]" : ""}">${ic(i, "h-[22px] w-[22px]")}</span>${l}</a></li>`).join("")}</ul>`;
 }
@@ -637,7 +639,7 @@ function route() { return decodeURIComponent(location.hash.slice(1)) || "inicio"
 function render(keepScroll = false) {
   const r = route(); renderNav(r);
   const v = r === "inicio" ? viewHome() : r === "explore" ? viewExplore() : r === "world-tour" ? viewWorld() : r === "mixology-ai" ? viewAI() : r === "my-bar" ? viewBar()
-    : r === "mocktails" ? viewMocktails() : r === "profile" ? viewProfile() : r === "suscripcion" ? viewSub() : r.startsWith("c-") ? viewCocktail(r.slice(2)) : r.startsWith("pais-") ? viewCountry(r.slice(5)) : viewNotFound();
+    : r === "mocktails" ? viewMocktails() : r === "profile" ? viewProfile() : r === "suscripcion" ? (APP ? viewProfile() : viewSub()) : r.startsWith("c-") ? viewCocktail(r.slice(2)) : r.startsWith("pais-") ? viewCountry(r.slice(5)) : viewNotFound();
   const y = window.scrollY;
   $("#main").innerHTML = v;
   if (keepScroll) window.scrollTo(0, y); else window.scrollTo(0, 0);
@@ -707,7 +709,29 @@ document.addEventListener("keydown", (e) => { if (wheel && !wheel.inline && e.ke
 document.addEventListener("mouseover", (e) => { const el = e.target.closest("[data-tip]"); const tip = $("#map-tip"); if (!tip) return; if (el) { const c = country(el.dataset.tip), n = counts()[c.code]; tip.textContent = `${c.flag} ${c.name} · ${n} ${n === 1 ? "cóctel" : "cócteles"}`; } });
 window.addEventListener("hashchange", () => { if (bm) closeBM(); if (wheel && !wheel.inline) closeWheel(); else if (wheel?.inline) wheel = null; render(); });
 
+// ───────────── verificación de edad ─────────────
+function ageGate() {
+  if (store.get("adult", false)) return;
+  const el = document.createElement("div");
+  el.id = "age-gate";
+  el.innerHTML = `<div role="dialog" aria-modal="true" aria-labelledby="age-t" class="fixed inset-0 z-[200] flex items-center justify-center bg-ink/95 p-6 backdrop-blur">
+    <div class="surface flex w-full max-w-sm flex-col items-center gap-5 p-8 text-center">${logo(64)}
+    <h2 id="age-t" class="font-display text-4xl font-bold uppercase">¿Tienes 18 años o más?</h2>
+    <p class="text-muted">Copete Club tiene recetas con alcohol y es solo para personas mayores de edad.</p>
+    <div class="grid w-full grid-cols-2 gap-3"><button data-age="no" class="btn-ghost">No</button><button data-age="yes" class="btn-neon">Sí, tengo 18+</button></div>
+    <p id="age-no" class="hidden font-ui text-sm text-gold">Vuelve cuando cumplas 18. Mientras, no podemos mostrarte el contenido.</p></div></div>`;
+  document.body.appendChild(el); document.body.style.overflow = "hidden";
+  el.addEventListener("click", (e) => {
+    const a = e.target.closest("[data-age]")?.dataset.age; if (!a) return;
+    if (a === "yes") { store.set("adult", true); el.remove(); document.body.style.overflow = ""; }
+    else $("#age-no").classList.remove("hidden");
+  });
+  setTimeout(() => el.querySelector('[data-age="yes"]').focus(), 50);
+}
+
 // ───────────── arranque ─────────────
+ageGate();
+if ("serviceWorker" in navigator && location.protocol === "https:") navigator.serviceWorker.register("sw.js").catch(() => {});
 if (store.get("motion", "full") === "reduced") document.documentElement.dataset.motion = "reduced";
 fetch("data.json?v=4").then((r) => r.json()).then((d) => {
   DATA = d; render();
