@@ -470,7 +470,7 @@ function viewBar() {
   const hist = Object.entries(S.history).sort((a, b) => b[1].last - a[1].last);
   const block = (id, title, body, empty) => `<section id="${id}" class="flex scroll-mt-24 flex-col gap-4"><h2 class="font-display text-4xl font-bold uppercase">${title}</h2>${body || `<p class="text-muted">${empty}</p>`}</section>`;
   return `<div class="flex flex-col gap-12"><header class="flex flex-col gap-4"><h1 class="font-display text-[clamp(3rem,10vw,5.5rem)] font-extrabold uppercase leading-[.85]">My Bar</h1>
-  <p class="font-ui text-sm text-gold">En esta versión de revisión tu bar se guarda solo en este navegador. En la app publicada queda en tu cuenta.</p>
+  <p class="font-ui text-sm text-gold">${APP ? "Tu bar se guarda en este teléfono." : "En esta versión de revisión tu bar se guarda solo en este navegador. En la app publicada queda en tu cuenta."}</p>
   <nav class="scroll-x -mx-4 flex gap-2 px-4">${[["favoritos", "Favoritos"], ["colecciones", "Colecciones"], ["pendientes", "Por probar"], ["casa", "En casa"], ["compras", "Lista de compras"], ["historial", "Historial"], ["notas", "Valoraciones y notas"], ["propias", "Recetas propias"]].map(([i, l]) => `<button data-scroll="${i}" class="chip shrink-0 hover:!text-white">${l}</button>`).join("")}</nav></header>
   ${block("favoritos", "Favoritos", fav.length ? grid(fav) : "", "Aún no guardas favoritos. Toca «Favorito» en cualquier cóctel.")}
   ${block("colecciones", "Colecciones", S.cols.map((c) => `<div class="flex flex-col gap-3"><div class="flex items-baseline justify-between"><h3 class="font-display text-2xl font-bold uppercase text-violet-soft">${esc(c.name)} <span class="font-ui text-sm font-normal text-muted">· ${c.items.length}</span></h3><button data-delcol="${c.id}" class="font-ui text-xs text-faint hover:text-danger">Eliminar colección</button></div>${c.items.length ? grid(c.items.map(cocktail).filter(Boolean)) : `<p class="text-muted">Colección vacía.</p>`}</div>`).join(""), "Crea colecciones como «Noche de amigos» o «Clásicos internacionales» desde cualquier ficha.")}
@@ -731,6 +731,7 @@ function ageGate() {
 
 // ───────────── arranque ─────────────
 ageGate();
+if (APP && $("#foot")) $("#foot").textContent = "Copete Club · 175 cócteles y mocktails del mundo. Tus favoritos y tu bar se guardan en este teléfono. Disfruta con responsabilidad · Solo para mayores de 18 años.";
 if ("serviceWorker" in navigator && location.protocol === "https:") navigator.serviceWorker.register("sw.js").catch(() => {});
 if (store.get("motion", "full") === "reduced") document.documentElement.dataset.motion = "reduced";
 fetch("data.json?v=4").then((r) => r.json()).then((d) => {
