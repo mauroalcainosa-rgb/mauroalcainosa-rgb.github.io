@@ -1,0 +1,59 @@
+name: Compilar apps Android (TWA)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "saludafacil-android/**"
+      - "boardgameworld-android/**"
+      - "lootradar-android/**"
+      - "cuyitv-android/**"
+      - ".github/workflows/android-apps.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        app: [saludafacil, boardgameworld, lootradar, cuyitv]
+    steps:
+      - uses: actions/checkout@v4
+      - name: ¿Existe el proyecto?
+        id: check
+        run: |
+          if [ -d "${{ matrix.app }}-android" ]; then echo "ok=true" >> "$GITHUB_OUTPUT"; else echo "ok=false" >> "$GITHUB_OUTPUT"; fi
+      - uses: actions/setup-java@v4
+        if: steps.check.outputs.ok == 'true'
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Compilar AAB sin firmar (la firma con la llave de subida se aplica fuera de CI)
+        if: steps.check.outputs.ok == 'true'
+        working-directory: ${{ matrix.app }}-android
+        run: |
+          chmod +x gradlew
+          ./gradlew --no-daemon bundleRelease
+      - uses: actions/upload-artifact@v4
+        if: steps.check.outputs.ok == 'true'
+        with:
+          name: ${{ matrix.app }}-release
+          path: ${{ matrix.app }}-android/app/build/outputs/bundle/release/*.aab
+      - name: Guardar el AAB en la rama android-build-${{ matrix.app }}
+        if: steps.check.outputs.ok == 'true'
+        run: |
+          mkdir -p /tmp/out && cp ${{ matrix.app }}-android/app/build/outputs/bundle/release/*.aab /tmp/out/app-release-unsigned.aab
+          git config user.name "github-actions[bot]"
+          git config user.email "41898733+github-actions[bot]@users.noreply.github.com"
+          git checkout --orphan android-build-${{ matrix.app }}
+          git rm -rqf --cached .
+          git clean -fdq -e .git
+          cp /tmp/out/app-release-unsigned.aab .
+          git add app-release-unsigned.aab
+          git commit -qm "AAB sin firmar de ${{ matrix.app }} (${GITHUB_SHA::7})"
+          git push -f origin android-build-${{ matrix.app }}
