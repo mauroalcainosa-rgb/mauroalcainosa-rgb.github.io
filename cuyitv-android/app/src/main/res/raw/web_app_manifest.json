@@ -1,0 +1,20 @@
+{
+  "id": "./",
+  "name": "Cuyi TV",
+  "short_name": "Cuyi TV",
+  "description": "Directorio de canales de televisión oficiales de Chile y Latinoamérica. Abre cada canal en YouTube o en su sitio oficial.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#07090f",
+  "theme_color": "#07090f",
+  "lang": "es-CL",
+  "dir": "ltr",
+  "categories": ["entertainment", "news"],
+  "icons": [
+    {"src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>Cuyi TV — Canales oficiales de Chile y Latinoamérica</title>
+<meta name="description" content="Cuyi TV: directorio de canales de televisión oficiales de Chile y Latinoamérica. Abre cada canal en YouTube o en su sitio oficial.">
+<meta name="theme-color" content="#07090f">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="icon" href="icons/icon-192.png" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="splash"><div><div class="globe" style="margin:auto"><img src="icons/icon.svg" alt=""></div><div class="splash-txt">CUYI TV<small>Canales oficiales de Chile y Latinoamérica</small></div></div></div>
+
+<header class="top">
+  <a class="logo" href="#inicio" aria-label="Cuyi TV inicio"><span class="mark"><img src="icons/icon.svg" alt=""></span><span>CUYI <b>TV</b></span></a>
+  <nav class="main" aria-label="Principal">
+    <a href="#inicio" data-nav="inicio">Inicio</a>
+    <a href="#envivo" data-nav="envivo">Canales</a>
+    <a href="#paises" data-nav="paises">Países</a>
+    <a href="#favoritos" data-nav="favoritos">Favoritos</a>
+  </nav>
+  <div class="top-actions">
+    <button class="country-pill hide-m" data-act="country" id="cpill" aria-label="Cambiar país">🇨🇱 Chile</button>
+    <a class="icon-btn" href="#buscar" aria-label="Buscar">🔍</a>
+    <a class="icon-btn" href="#guia" aria-label="Programación" title="Programación">🗓️</a>
+    <a class="icon-btn hide-m" href="#config" aria-label="Configuración">⚙️</a>
+    <a class="avatar" href="#perfil" aria-label="Perfil" id="avatar">P</a>
+  </div>
+</header>
+
+<main id="app" aria-live="polite"><noscript><p style="padding:24px">Cuyi TV necesita JavaScript activado.</p></noscript></main>
+
+<footer>
+  <b>Cuyi TV</b> · Directorio de canales oficiales de Chile y Latinoamérica.<br>
+  Cuyi TV no aloja, retransmite ni reproduce señales: los videos se ven en YouTube o en el sitio oficial de cada canal, bajo sus propias condiciones.
+  Las marcas y nombres de canales pertenecen a sus respectivos dueños.<br>
+  <a href="privacidad.html" style="color:var(--accent)">Política de privacidad</a> ·
+  <a href="https://www.youtube.com/t/terms" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">Términos de servicio de YouTube</a> ·
+  Contacto: <a href="mailto:mauroalcainosa@gmail.com" style="color:var(--accent)">mauroalcainosa@gmail.com</a>
+</footer>
+
+<nav class="bottom" aria-label="Navegación móvil">
+  <a href="#inicio" data-nav="inicio"><span>🏠</span>Inicio</a>
+  <a href="#envivo" data-nav="envivo"><span>📺</span>Canales</a>
+  <a href="#paises" data-nav="paises"><span>🌎</span>Países</a>
+  <a href="#favoritos" data-nav="favoritos"><span>♥</span>Favoritos</a>
+  <a href="#config" data-nav="config"><span>⚙️</span>Ajustes</a>
+</nav>
+<div id="toast" role="status"></div>
+
+<script src="data/channels.js"></script>
+<script src="store.js"></script>
+<script src="app.js"></script>
+<script src="header.js"></script>
+</body>
+</html>
