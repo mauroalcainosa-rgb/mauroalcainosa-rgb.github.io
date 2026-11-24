@@ -20,7 +20,20 @@
       "namespace": "android_app",
       "package_name": "cl.copeteclub.app",
       "sha256_cert_fingerprints": [
-        "3F:F1:F7:3F:AF:F4:52:D9:EF:65:5C:D7:81:7E:BD:CA:E1:E7:DB:36:3D:92:AC:23:50:2D:8F:CD:F4:70:40:36"
+        "3F:F1:F7:3F:AF:F4:52:D9:EF:65:5C:D7:81:7E:BD:CA:E1:E7:DB:36:3D:92:AC:23:50:2D:8F:CD:F4:70:40:36",
+        "FF:88:AB:2D:B3:88:CC:17:EF:5F:81:EC:6E:4C:47:D4:38:F8:44:06:0D:B4:C0:7B:27:08:E7:F0:B0:B2:51:32"
+      ]
+    }
+  },
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "cl.elpozo.app",
+      "sha256_cert_fingerprints": [
+        "E4:FE:D5:D5:25:F5:5C:63:44:3B:39:6B:82:D5:68:5C:47:2B:ED:40:FA:7A:CB:FE:6D:9E:B0:3F:7D:9E:ED:F3"
       ]
     }
   }
